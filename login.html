@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSL - Authenticate</title>
+  <style>
+    body {
+      background-color: #111116;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .auth-card {
+      background: #181820;
+      border: 2px solid #ffffff;
+      border-radius: 12px;
+      padding: 40px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+    }
+    h2 { margin-top: 0; font-size: 26px; font-weight: 700; letter-spacing: 0.5px; }
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 12px 0;
+      background: #252530;
+      border: 1px solid #3b3b4f;
+      color: white;
+      border-radius: 6px;
+      font-size: 15px;
+      outline: none;
+    }
+    input:focus { border-color: #ffffff; }
+    button {
+      width: 97%;
+      padding: 12px;
+      background: white;
+      color: #111116;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    .toggle-text { margin-top: 20px; font-size: 14px; color: #aaa; }
+    .toggle-text a { color: #5865F2; text-decoration: none; font-weight: bold; }
+    #auth-msg { margin-top: 15px; font-size: 14px; min-height: 20px; font-weight: 500; }
+  </style>
+  <!-- Load Free Supabase Client Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="auth-card">
+    <h2 id="auth-title">Log In</h2>
+    
+    <input type="email" id="auth-email" placeholder="Email Address">
+    <input type="password" id="auth-password" placeholder="Password">
+    
+    <button id="auth-btn" onclick="handleAuth()">Log In</button>
+    
+    <p class="toggle-text" id="auth-toggle-wrapper">
+      Don't have an account? <a href="#" onclick="toggleMode(event)">Sign Up</a>
+    </p>
+    
+    <div id="auth-msg"></div>
+  </div>
+
+  <script>
+    // Replace with your real credentials from Supabase settings!
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL'; 
+    const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let isLoginMode = true;
+
+    function toggleMode(e) {
+      e.preventDefault();
+      isLoginMode = !isLoginMode;
+      document.getElementById("auth-title").innerText = isLoginMode ? "Log In" : "Create Account";
+      document.getElementById("auth-btn").innerText = isLoginMode ? "Log In" : "Sign Up";
+      document.getElementById("auth-toggle-wrapper").innerHTML = isLoginMode ? 
+        `Don't have an account? <a href="#" onclick="toggleMode(event)">Sign Up</a>` :
+        `Already have an account? <a href="#" onclick="toggleMode(event)">Log In</a>`;
+      document.getElementById("auth-msg").innerText = "";
+    }
+
+    async function handleAuth() {
+      const email = document.getElementById("auth-email").value;
+      const password = document.getElementById("auth-password").value;
+      const msg = document.getElementById("auth-msg");
+
+      msg.style.color = "#e0a800";
+      msg.innerText = "Processing authentication...";
+
+      if (isLoginMode) {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) {
+          msg.style.color = "#ff4747";
+          msg.innerText = error.message;
+        } else {
+          msg.style.color = "#28a745";
+          msg.innerText = "Success! Redirecting...";
+          setTimeout(() => { window.location.href = "/"; }, 1000); // Sends them back to home page
+        }
+      } else {
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) {
+          msg.style.color = "#ff4747";
+          msg.innerText = error.message;
+        } else {
+          msg.style.color = "#28a745";
+          msg.innerText = "Account created! Check your email inbox to verify.";
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
