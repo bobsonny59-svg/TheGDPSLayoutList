@@ -9,9 +9,9 @@
     "password": "no pass",
     "records": [
         {
-            "user": "larpuk",
+            "user": "",
             "link": "https://www.youtube.com/watch?v=Dvl9hNihAQc",
-            "percent": 100,
+            "percent": 0,
             "hz": 320
         }
     ]
