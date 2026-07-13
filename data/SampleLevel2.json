@@ -1,11 +1,11 @@
 {
-    "id": 144700331,
-    "name": "Larpbath",
-    "author": "larpuk/thalasser",
-    "creators": ["larpuk"],
-    "verifier": "larpuk",
-    "verification": "https://www.youtube.com/watch?v=Dvl9hNihAQc",
-    "percentToQualify": 100,
-    "password": "no pass",
-    "records": []
+  "id": 57436521,
+  "name": "Larpbath",
+  "author": "larpuk/thalasser",
+  "creators": [larpuk],
+  "verifier": "larpuk",
+  "verification": "https://www.youtube.com/watch?v=Dvl9hNihAQc",
+  "percentToQualify": 100,
+  "password": "no pass",
+  "records": []
 }
