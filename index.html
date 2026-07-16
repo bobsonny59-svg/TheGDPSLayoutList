@@ -78,162 +78,6 @@
                 --card-bg: rgba(255,255,255,0.7);
             }
 
-            /* apply these variables to the body – we need the actual classes from the app */
-            /* The app uses :class="{ dark: store.dark }" on header and router-view,
-               so we target those and also set body background based on store? 
-               Since we can't easily react to store outside the app, we'll use a simple 
-               approach: the original code already toggles .dark class on those elements.
-               We'll style those. For body we can set background to match. 
-               But the easiest: set body bg to dark, and .light .dark will override. 
-               However we don't have a .light class on body. 
-               The original header has :class="{ dark: store.dark }" and router-view as well.
-               We can just style the .dark class and its inverse.
-               Since the store.dark toggles the class on the elements, we can use 
-               :not(.dark) for light mode. We'll use a body with default dark, 
-               and when .dark is NOT present on the main elements, we treat as light.
-               To keep it simple, we'll use a body class .light when store.dark is false.
-               But the original doesn't add that. So we'll add it ourselves via a watcher? 
-               Since we can't modify the JS, we'll instead use CSS that targets the 
-               parent #app and uses .dark or not. We'll set body background to dark by default,
-               and if the header does NOT have .dark, then we assume light mode? 
-               Actually the original already sets a class on the header and router-view.
-               So we can use the presence of .dark on those elements to style everything.
-               We'll use a CSS custom property approach: we set the properties on the 
-               :root based on the presence of .dark on the header? That's not possible.
-               We'll use a more straightforward approach: we'll set the body background 
-               and text colors using a class on the body. Since we can't add a class 
-               to body from the Vue app, we'll rely on the fact that the original 
-               may not have body dark toggle. But the user wants to keep the exact 
-               original functionality. The original already has a toggle that changes 
-               store.dark and uses it in the template. So we can add a class to body 
-               using a watcher? But we can't change JS. 
-               Alternative: we can use the existing .dark class on the header 
-               and router-view to style the entire page using CSS that selects 
-               based on those elements. For example: 
-               header.dark ~ #app, header.dark + router-view? Not reliable.
-               Better: we can add a style that changes body background based on 
-               the presence of .dark on the header. Since the header is a sibling 
-               of the router-view, we can use the general sibling selector: 
-               header.dark ~ .view? But the router-view is not a sibling of header? 
-               In the HTML, header is before <router-view>, so they are siblings.
-               We can do: header.dark ~ .view { ... } and header:not(.dark) ~ .view { ... }
-               But we also need to style the body. We can set body background to dark 
-               and then when header is not .dark, we can change it via a rule on the 
-               body? But body is ancestor, so we can't style ancestor based on descendant.
-               The simplest is to use the existing approach: the original already sets 
-               a class on the router-view: <router-view :class="{ dark: store.dark }"></router-view>
-               So we can style .view.dark and .view:not(.dark) to define colors.
-               And we also have header.dark and header:not(.dark).
-               So we'll define all colors using these selectors. We'll set body default 
-               to dark, and when router-view does not have .dark, we override with light.
-               Since body is ancestor, we can set body background to dark, and then 
-               when .view:not(.dark) we can set body background? Not possible.
-               Instead, we'll use CSS custom properties that we set on the body 
-               based on the presence of .dark on the router-view? Can't do that with CSS only.
-               We need a solution that doesn't modify JS.
-
-               Let's just stick to the original approach: the original already has 
-               a toggle that changes the class on the header and router-view. 
-               We'll design the CSS so that all elements inherit their colors from 
-               the .dark or :not(.dark) context. We'll set the body background 
-               to a default dark, and use a rule like:
-               body:has(.dark) { background: var(--bg-dark); } but :has is not widely supported.
-               Instead, we'll rely on the fact that the user will likely keep the 
-               default dark mode, and we'll make the light mode work as well by 
-               applying classes to the root elements. Since we cannot change JS, 
-               we'll just make both modes look good with default dark styling 
-               and if the toggle is clicked, the .dark class is removed, so we 
-               need to handle that with a default light styling.
-               I'll set the body background to a light mode by default, and then 
-               if .dark is present on the header, we use dark mode. But the header 
-               gets .dark only when store.dark is true, which defaults to? 
-               The original doesn't set a default, so store.dark is undefined? 
-               Actually in the original, store.dark is a reactive property set in the 
-               store? The code provided doesn't show the store, it's in /js/main.js.
-               Since we don't have that, we can't know. But we can assume that 
-               by default, the page will have .dark on header? Actually the original 
-               template has :class="{ dark: store.dark }" so if store.dark is false, 
-               no dark class. So default is light. So we'll set body background 
-               to light by default and override when .dark is present.
-               We'll use a rule: header.dark ~ .view, header.dark ~ .nav, etc.
-               But we also have the router-view that gets the dark class.
-               So we can target .view.dark and .view:not(.dark).
-               To style the header, we can style header.dark and header:not(.dark).
-               So we'll define all colors using these classes.
-
-               Let's define our color scheme:
-               - Light mode (no .dark on header/router-view): 
-                 bg: #f4f6fa, text: #1a1e26, surface: #ffffff, accent: #6c5ce7
-               - Dark mode (.dark): 
-                 bg: #0d0f14, text: #eaeef2, surface: #191c25, accent: #7c6df0
-
-               We'll style the body background via a rule that sets it based on 
-               whether .dark is present on header? Since body is parent, we can't.
-               But we can set body background to a default, and then use a rule 
-               on the router-view to change the background of the body? Not possible.
-               Instead, we'll set the background on the #app container and make 
-               it full height, and set body background to transparent. 
-               We'll make #app fill the viewport and set its background.
-               Then we can style #app based on .dark presence on its children?
-               We can use .view.dark ~ .view? No.
-
-               Simpler: we'll use a CSS variable approach on the body and update 
-               it via a script that watches store.dark? But we can't change JS.
-               However, we can add a small script after the Vue app that toggles 
-               a class on the body whenever the store.dark changes? That would 
-               require accessing the app instance. Not trivial.
-
-               I think the best is to just assume the user's store.dark default is false, 
-               and we'll make the light mode look great by default, and when the user 
-               clicks the toggle, the .dark class appears, and we'll have styles for 
-               both. Since the header and router-view get the class, we can style 
-               everything inside those elements. For the body background, we can 
-               set it to a neutral color, and then inside #app we set the background 
-               based on the presence of .dark on its children? We can use the 
-               :has() selector: #app:has(.dark) { background: dark; } but not widely supported.
-               We'll instead set the body background to a dark color by default, 
-               and use the .dark class on the header to apply light mode? That's confusing.
-
-               Given the complexity, I'll use a simple approach: I'll set the body 
-               background to a dark color and use a CSS rule that if the header 
-               does NOT have .dark, then we assume light mode and override the 
-               body background? But the header is a child of body, so we can't 
-               style body from header.
-
-               Alright, I'll just keep the original dark/light toggle as it is, 
-               but I'll make both modes look stunning. I'll define all colors 
-               using CSS variables and set them on the body. Then in the header 
-               and router-view, I'll set the variables based on the class. 
-               Since the body can't be affected by children, I'll use a trick: 
-               I'll set the variables on the body with a default (light), and 
-               then I'll use a rule that when .dark is present on the header, 
-               I'll override the variables on the header and router-view, and 
-               also on the body? But I can't. 
-               I'll just set the body background to a default (light) and the 
-               header and router-view will have their own backgrounds. 
-               Then I'll set the body background to dark only when .dark is on 
-               the header? I can use a sibling selector: if header is followed 
-               by router-view, but body is parent.
-
-               I'm overcomplicating. The original already works with a dark class 
-               on header and router-view. All I need to do is style those elements 
-               and their descendants. I don't need to change the body background 
-               because the body is behind them; I can set body background to a 
-               neutral color that matches the overall design. The content area 
-               will have its own background. So I'll set body background to the 
-               light background, and when .dark is applied to header and router-view, 
-               they will have dark backgrounds. That's fine.
-
-               So I'll define:
-               - body: background #f4f6fa (light)
-               - header.dark, .view.dark: background #0d0f14, etc.
-               - header:not(.dark), .view:not(.dark): background #ffffff or similar.
-
-               I'll make sure the transition is smooth.
-
-               So let's write the CSS.
-            */
-
             /* Global defaults (light mode) */
             body {
                 background: #f2f5fa;
@@ -444,6 +288,7 @@
                 font-weight: 600;
                 color: #8892a8;
                 letter-spacing: 0.5px;
+                margin-bottom: 2px;
             }
             .dark .record-card .rank {
                 color: #94a3b8;
@@ -452,19 +297,53 @@
                 font-size: 1.3rem;
                 font-weight: 700;
                 color: #1a1e26;
+                margin-bottom: 8px;
             }
             .dark .record-card .title {
                 color: #eaeef2;
             }
+
+            /* ===== 🔥 FIX: Display bugs for leaderboard/list items ===== */
             .record-card .meta {
                 display: flex;
+                align-items: center;
                 justify-content: space-between;
-                font-size: 0.85rem;
-                color: #5f6b7a;
+                gap: 12px;
+                flex-wrap: wrap;
             }
-            .dark .record-card .meta {
-                color: #8892a8;
+            /* Score (first child) – bold, monospaced, green */
+            .record-card .meta > *:first-child {
+                font-weight: 600;
+                font-variant-numeric: tabular-nums;
+                font-size: 1rem;
+                color: #22c55e; /* assume positive */
             }
+            .dark .record-card .meta > *:first-child {
+                color: #4ade80;
+            }
+            /* Badge (last child) – pill style, green */
+            .record-card .meta > *:last-child {
+                background: rgba(34, 197, 94, 0.15);
+                color: #22c55e;
+                padding: 2px 14px;
+                border-radius: 30px;
+                font-size: 0.7rem;
+                font-weight: 600;
+                border: 1px solid rgba(34, 197, 94, 0.2);
+                white-space: nowrap;
+            }
+            .dark .record-card .meta > *:last-child {
+                background: rgba(34, 197, 94, 0.2);
+                border-color: rgba(34, 197, 94, 0.3);
+                color: #4ade80;
+            }
+            /* If there's a count inside badge (like (1)), keep it styled */
+            .record-card .meta > *:last-child .count {
+                font-weight: 700;
+                margin-left: 2px;
+            }
+
+            /* Original badge class override – keep for compatibility */
             .record-card .badge {
                 background: rgba(124,109,240,0.12);
                 color: #7c6df0;
@@ -478,6 +357,7 @@
                 background: rgba(124,109,240,0.18);
                 color: #a78bfa;
             }
+            /* But for the "Verified" badge, we override with green via the generic rule above */
 
             /* Leaderboard table */
             .leaderboard-table {
@@ -637,6 +517,13 @@
                 .nav__tab {
                     font-size: 0.8rem;
                     padding: 6px 12px;
+                }
+                .record-card .meta {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+                .record-card .meta > *:last-child {
+                    align-self: flex-start;
                 }
             }
 
