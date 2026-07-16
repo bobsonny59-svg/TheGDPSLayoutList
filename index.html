@@ -1,80 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=1024" />
-        <title>the larp list</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Larp List · v2.0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
 
-        <!-- Replace your server icon by uploading an image file named "list_icon.png"-->
-        <link rel="icon" href="/list_icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
-        <link rel="stylesheet" type="text/css" href="/css/typography.css" />
-        <link rel="stylesheet" type="text/css" href="/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/pages/leaderboard.css"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/components/tabs.css"
-        />
-        <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
-        <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
-    </head>
-    <body id="app">
-        <header :class="{ dark: store.dark }">
-            <div class="logo">
-                <h2>Larp List
-            </h2>
-                <p>v1.0.0</p>
-            </div>
-            <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
-                <div class="nav__actions">
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                        />
-                    </button>
-                    <!-- Replace the '#' with your discord server's invite-->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
-                    </a>
-                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
-                    <a
-                        class="nav__cta type-label-lg"
-                        href="https://forms.gle/irLaSCGuXMbEwD28A"
-                        target="_blank"
-                        >Submit Record</a
-                    >
-                </div>
-            </nav>
-        </header>
-        <router-view :class="{ dark: store.dark }"></router-view>
-    </body>
+  <!-- Font Awesome for icons (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0d10;
+      color: #e8edf2;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      padding: 20px;
+    }
+    body.light {
+      background: #f2f5f9;
+      color: #1a1e24;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+    }
+
+    /* ===== APP CONTAINER ===== */
+    #app {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logo .version {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #94a3b8;
+      background: rgba(255,255,255,0.06);
+      padding: 2px 10px;
+      border-radius: 20px;
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      color: #94a3b8;
+    }
+    .nav a:hover {
+      background: rgba(255,255,255,0.08);
+      color: #e8edf2;
+    }
+    .nav a.router-link-active {
+      background: rgba(167, 139, 250, 0.2);
+      color: #a78bfa;
+    }
+    .nav .actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+    }
+    .nav .actions button,
+    .nav .actions a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      transition: 0.2s;
+      color: #94a3b8;
+      font-size: 1.2rem;
+    }
+    .nav .actions button:hover,
+    .nav .actions a:hover {
+      background: rgba(255,255,255,0.12);
+      color: #e8edf2;
+    }
+    .nav .cta {
+      background: #a78bfa;
+      color: #0b0d10 !important;
+      padding: 8px 20px !important;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .nav .cta:hover {
+      background: #8b5cf6;
+      transform: scale(1.02);
+    }
+
+    /* ===== VIEWS ===== */
+    .view {
+      animation: fadeSlide 0.3s ease;
+    }
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(12px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== LIST VIEW ===== */
+    .list-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+    .list-controls input,
+    .list-controls select {
+      padding: 10px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+      color: #e8edf2;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      outline: none;
+    }
+    .list-controls input:focus,
+    .list-controls select:focus {
+      border-color: #a78bfa;
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2);
+    }
+    .list-controls input::placeholder {
+      color: #64748b;
+    }
+    .list-controls select option {
+      background: #1a1e24;
+    }
+    body.light .list-controls input,
+    body.light .list-controls select {
+      background: #fff;
+      border-color: #d1d9e6;
+      color: #1a1e24;
+    }
+    body.light .list-controls select option {
+      background: #fff;
+    }
+
+    .record-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .record-card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: 0.25s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .record-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(167, 139, 250, 0.3);
+    }
+    .record-card .rank {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+    .record-card .title {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .record-card .meta {
+      display: flex;
+      justify-content: space-between;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    .record-card .badge {
+      background: rgba(167, 139, 250, 0.15);
+      color: #a78bfa;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      align-self: flex-start;
+    }
+    body.light .record-card {
+      background: rgba(255,255,255,0.7);
+      border-color: rgba(0,0,0,0.06);
+    }
+    body.light .record-card:hover {
+      background: rgba(255,255,255,0.9);
+      border-color: rgba(167, 139, 250, 0.3);
+    }
+
+    /* ===== LEADERBOARD ===== */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.04);
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+    .leaderboard-table th {
+      text-align: left;
+      padding: 16px 20px;
+      font-weight: 600;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      background: rgba(255,255,255,0.04);
+    }
+    .leaderboard-table td {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .leaderboard-table tr:hover td {
+      background: rgba(255,255,255,0.04);
+    }
+    body.light .leaderboard-table {
+      background: rgba(255,255,255,0.5);
+    }
+    body.light .leaderboard-table th {
+      background: rgba(0,0,0,0.04);
+    }
+    body.light .leaderboard-table td {
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+    body.light .leaderboard-table tr:hover td {
+      background: rgba(0,0,0,0.02);
+    }
+    .leaderboard-table .gold { color: #facc15; }
+    .leaderboard-table .silver { color: #94a3b8; }
+    .leaderboard-table .bronze { color: #cd7f32; }
+
+    /* ===== ROULETTE ===== */
+    .roulette-wrapper {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .roulette-display {
+      font-size: 3rem;
+      font-weight: 700;
+      padding: 40px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 30px;
+      transition: 0.3s;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .roulette-display .sub {
+      font-size: 1rem;
+      color: #94a3b8;
+    }
+    .roulette-spin {
+      padding: 14px 40px;
+      border-radius: 60px;
+      background: #a78bfa;
+      color: #0b0d10;
+      font-weight: 700;
+      font-size: 1.2rem;
+      transition: 0.2s;
+    }
+    .roulette-spin:hover {
+      background: #8b5cf6;
+      transform: scale(1.05);
+    }
+    .roulette-spin:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      header { flex-direction: column; align-items: stretch; }
+      .nav { justify-content: center; }
+      .nav a { font-size: 0.85rem; padding: 6px 12px; }
+      .record-grid { grid-template-columns: 1fr; }
+      .leaderboard-table th, .leaderboard-table td { padding: 10px 12px; font-size: 0.85rem; }
+      .roulette-display { font-size: 2rem; padding: 20px; }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #a78bfa; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <h1>Larp List</h1>
+      <span class="version">v2.0</span>
+    </div>
+    <nav class="nav">
+      <a href="#" @click.prevent="view = 'list'" :class="{ 'router-link-active': view === 'list' }">List</a>
+      <a href="#" @click.prevent="view = 'leaderboard'" :class="{ 'router-link-active': view === 'leaderboard' }">Leaderboard</a>
+      <a href="#" @click.prevent="view = 'roulette'" :class="{ 'router-link-active': view === 'roulette' }">Roulette</a>
+      <div class="actions">
+        <button @click="toggleDark" :title="dark ? 'Switch to light' : 'Switch to dark'">
+          <i :class="dark ? 'fa-regular fa-sun' : 'fa-regular fa-moon'"></i>
+        </button>
+        <a href="https://discord.gg/W9PhXXMSd" target="_blank"><i class="fa-brands fa-discord"></i></a>
+        <a href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" class="cta">Submit Record</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- VIEWS -->
+  <div class="view" v-if="view === 'list'">
+    <div class="list-controls">
+      <input type="text" v-model="search" placeholder="🔍 Search records..." />
+      <select v-model="gameFilter">
+        <option value="">All Games</option>
+        <option v-for="g in games" :value="g">{{ g }}</option>
+      </select>
+      <select v-model="sortBy">
+        <option value="rank">Rank</option>
+        <option value="time">Time (fastest)</option>
+        <option value="date">Date (newest)</option>
+      </select>
+    </div>
+    <div class="record-grid">
+      <div class="record-card" v-for="(rec, idx) in filteredRecords" :key="idx">
+        <div class="rank">#{{ rec.rank }}</div>
+        <div class="title">{{ rec.player }}</div>
+        <div class="meta">
+          <span>{{ rec.game }}</span>
+          <span>{{ rec.time }}</span>
+        </div>
+        <div class="badge">{{ rec.category }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="view" v-if="view === 'leaderboard'">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Player</th>
+          <th>Game</th>
+          <th>Time</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(rec, idx) in leaderboardData" :key="idx">
+          <td>
+            <span v-if="idx === 0" class="gold"><i class="fa-solid fa-crown"></i></span>
+            <span v-else-if="idx === 1" class="silver">2</span>
+            <span v-else-if="idx === 2" class="bronze">3</span>
+            <span v-else>{{ idx + 1 }}</span>
+          </td>
+          <td>{{ rec.player }}</td>
+          <td>{{ rec.game }}</td>
+          <td>{{ rec.time }}</td>
+          <td>{{ rec.category }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="view" v-if="view === 'roulette'">
+    <div class="roulette-wrapper">
+      <div class="roulette-display">
+        <div v-if="spinResult">{{ spinResult.player }}</div>
+        <div class="sub" v-if="spinResult">{{ spinResult.game }} · {{ spinResult.time }}</div>
+        <div v-else><i class="fa-regular fa-circle-question" style="font-size:2rem; color:#64748b;"></i><br /><span style="font-size:1rem; color:#64748b;">Press spin to pick a random record</span></div>
+      </div>
+      <button class="roulette-spin" @click="spinRoulette" :disabled="spinning">
+        <i class="fa-solid fa-dice"></i> {{ spinning ? 'Spinning...' : 'Spin' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
+<script>
+  const { createApp, ref, computed, watch } = Vue;
+
+  // ----- SAMPLE DATA (replace with your own) -----
+  const records = [
+    { player: 'LuckyLuke', game: 'Minecraft', category: 'Any%', time: '12:34.5', date: '2025-01-15' },
+    { player: 'SpeedDemon', game: 'GD', category: 'Demon', time: '08:21.0', date: '2025-02-20' },
+    { player: 'PixelPusher', game: 'Roblox', category: 'Classic', time: '05:12.8', date: '2025-03-01' },
+    { player: 'Architect', game: 'Minecraft', category: '100%', time: '45:10.2', date: '2025-01-28' },
+    { player: 'Wizard', game: 'GD', category: 'Auto', time: '03:45.9', date: '2025-02-14' },
+    { player: 'NoobSlayer', game: 'Fortnite', category: 'Solo', time: '09:33.1', date: '2025-03-10' },
+    { player: 'Frog', game: 'Roblox', category: 'Speedrun', time: '06:20.3', date: '2025-02-05' },
+    { player: 'MegaMind', game: 'Minecraft', category: 'Any%', time: '11:02.7', date: '2025-03-15' },
+    { player: 'Flash', game: 'GD', category: 'Insane', time: '02:15.6', date: '2025-01-02' },
+    { player: 'Boss', game: 'Roblox', category: 'Classic', time: '07:44.0', date: '2025-02-28' }
+  ];
+
+  // Add a rank based on time (fastest first)
+  const sorted = [...records].sort((a,b) => parseFloat(a.time) - parseFloat(b.time));
+  sorted.forEach((r, i) => r.rank = i + 1);
+
+  const app = createApp({
+    setup() {
+      const dark = ref(JSON.parse(localStorage.getItem('larp-dark') || 'true'));
+      const view = ref('list');
+      const search = ref('');
+      const gameFilter = ref('');
+      const sortBy = ref('rank');
+      const spinResult = ref(null);
+      const spinning = ref(false);
+
+      // Toggle dark mode and save
+      function toggleDark() {
+        dark.value = !dark.value;
+        localStorage.setItem('larp-dark', JSON.stringify(dark.value));
+        document.body.classList.toggle('light', !dark.value);
+      }
+
+      // Apply dark mode on mount
+      document.body.classList.toggle('light', !dark.value);
+
+      // Compute available games for filter
+      const games = computed(() => [...new Set(records.map(r => r.game))]);
+
+      // Filtered and sorted records
+      const filteredRecords = computed(() => {
+        let result = sorted.filter(r => {
+          const matchSearch = r.player.toLowerCase().includes(search.value.toLowerCase()) ||
+                              r.game.toLowerCase().includes(search.value.toLowerCase());
+          const matchGame = gameFilter.value ? r.game === gameFilter.value : true;
+          return matchSearch && matchGame;
+        });
+        // Sort
+        if (sortBy.value === 'rank') result.sort((a,b) => a.rank - b.rank);
+        else if (sortBy.value === 'time') result.sort((a,b) => parseFloat(a.time) - parseFloat(b.time));
+        else if (sortBy.value === 'date') result.sort((a,b) => new Date(b.date) - new Date(a.date));
+        return result;
+      });
+
+      // Leaderboard data (just sorted by rank)
+      const leaderboardData = computed(() => sorted);
+
+      // Roulette
+      function spinRoulette() {
+        if (spinning.value) return;
+        spinning.value = true;
+        spinResult.value = null;
+        // Simulate spinning animation
+        setTimeout(() => {
+          const random = sorted[Math.floor(Math.random() * sorted.length)];
+          spinResult.value = random;
+          spinning.value = false;
+        }, 600);
+      }
+
+      return {
+        dark,
+        view,
+        search,
+        gameFilter,
+        sortBy,
+        games,
+        filteredRecords,
+        leaderboardData,
+        spinResult,
+        spinning,
+        toggleDark,
+        spinRoulette
+      };
+    }
+  });
+
+  app.mount('#app');
+</script>
+</body>
 </html>
