@@ -34,27 +34,35 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Fix header to allow scrolling */
+            /* Fix header - make nav scrollable */
             header {
-                overflow: visible;
+                overflow: hidden;
                 position: relative;
+            }
+            
+            .nav-wrapper {
+                position: relative;
+                width: 100%;
+                overflow: visible;
             }
             
             .nav {
                 display: flex;
                 align-items: center;
-                gap: 1rem;
-                width: 100%;
+                gap: 0.75rem;
+                padding: 0.5rem 0;
                 overflow-x: auto;
                 overflow-y: hidden;
-                padding: 0.5rem 0;
                 -webkit-overflow-scrolling: touch;
                 scroll-behavior: smooth;
+                white-space: nowrap;
+                width: 100%;
+                flex-wrap: nowrap;
             }
             
-            /* Hide scrollbar but keep functionality */
+            /* Custom scrollbar */
             .nav::-webkit-scrollbar {
-                height: 4px;
+                height: 3px;
             }
             
             .nav::-webkit-scrollbar-track {
@@ -70,18 +78,23 @@
                 background: #8c7cf0;
             }
             
-            /* Keep nav tabs and actions in line */
-            .nav__tab {
-                white-space: nowrap;
+            /* Force everything to stay in one line */
+            .nav__tab,
+            .nav__actions,
+            .nav__auth,
+            .nav__cta,
+            .nav__icon,
+            .btn-auth {
                 flex-shrink: 0;
+                white-space: nowrap;
             }
             
             .nav__actions {
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
-                flex-shrink: 0;
                 margin-left: auto;
+                flex-shrink: 0;
             }
             
             .nav__auth {
@@ -174,58 +187,6 @@
                 display: flex;
                 align-items: center;
                 flex-shrink: 0;
-            }
-            
-            /* Scroll indicators */
-            .nav-scroll-indicator {
-                display: none;
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 30px;
-                height: 30px;
-                background: rgba(108, 92, 231, 0.9);
-                border-radius: 50%;
-                color: white;
-                border: none;
-                cursor: pointer;
-                font-size: 18px;
-                z-index: 10;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            }
-            
-            .nav-scroll-indicator:hover {
-                background: #5a4bd1;
-                transform: translateY(-50%) scale(1.1);
-            }
-            
-            .nav-scroll-indicator.left {
-                left: 5px;
-            }
-            
-            .nav-scroll-indicator.right {
-                right: 5px;
-            }
-            
-            header.dark .nav-scroll-indicator {
-                background: rgba(140, 124, 240, 0.9);
-            }
-            
-            header.dark .nav-scroll-indicator:hover {
-                background: #a394f5;
-            }
-            
-            /* Show scroll indicators when needed */
-            .nav-wrapper {
-                position: relative;
-                width: 100%;
-            }
-            
-            .nav-wrapper.has-scroll .nav-scroll-indicator {
-                display: flex;
             }
 
             /* ===== MODAL STYLES ===== */
@@ -457,7 +418,7 @@
                 <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
-            <div class="nav-wrapper" ref="navWrapper">
+            <div class="nav-wrapper">
                 <nav class="nav" ref="navContainer">
                     <router-link class="nav__tab" to="/">
                         <span class="type-label-lg">List</span>
@@ -493,8 +454,6 @@
                         </div>
                     </div>
                 </nav>
-                <button class="nav-scroll-indicator left" @click="scrollNav('left')" ref="scrollLeft">‹</button>
-                <button class="nav-scroll-indicator right" @click="scrollNav('right')" ref="scrollRight">›</button>
             </div>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
@@ -595,36 +554,7 @@
                             setTimeout(() => {
                                 this.handleSignUp();
                             }, 300);
-                        },
-                        scrollNav(direction) {
-                            const container = this.$refs.navContainer;
-                            const scrollAmount = 200;
-                            if (direction === 'left') {
-                                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                            } else {
-                                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                            }
                         }
-                    },
-                    mounted() {
-                        // Check if scrolling is needed
-                        const checkScroll = () => {
-                            const container = this.$refs.navContainer;
-                            const wrapper = this.$refs.navWrapper;
-                            if (container.scrollWidth > container.clientWidth) {
-                                wrapper.classList.add('has-scroll');
-                            } else {
-                                wrapper.classList.remove('has-scroll');
-                            }
-                        };
-                        
-                        // Check on mount and resize
-                        this.$nextTick(checkScroll);
-                        window.addEventListener('resize', checkScroll);
-                        
-                        // Also check when nav changes
-                        const observer = new MutationObserver(checkScroll);
-                        observer.observe(this.$refs.navContainer, { childList: true, subtree: true });
                     }
                 });
             })();
