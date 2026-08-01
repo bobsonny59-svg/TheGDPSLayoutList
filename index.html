@@ -34,7 +34,7 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Add styles for auth buttons */
+            /* Style auth buttons exactly like nav__cta */
             .nav__auth {
                 display: flex;
                 align-items: center;
@@ -43,7 +43,7 @@
             
             .nav__auth .btn-auth {
                 display: inline-block;
-                padding: 0.4rem 1.2rem;
+                padding: 0.45rem 1.2rem;
                 border-radius: 2rem;
                 font-family: 'Lexend Deca', sans-serif;
                 font-weight: 500;
@@ -59,56 +59,35 @@
                 flex-shrink: 0;
             }
             
-            .nav__auth .btn-signup {
+            /* Both buttons use the same style as nav__cta */
+            .nav__auth .btn-signup,
+            .nav__auth .btn-login {
                 background: #6c5ce7;
                 color: #fff;
                 border-color: #6c5ce7;
                 box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
             }
             
-            .nav__auth .btn-signup:hover {
+            .nav__auth .btn-signup:hover,
+            .nav__auth .btn-login:hover {
                 background: #5a4bd1;
                 border-color: #5a4bd1;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
                 transform: translateY(-2px);
             }
             
-            .nav__auth .btn-login {
-                background: transparent;
-                color: #6c5ce7;
-                border-color: #6c5ce7;
-                box-shadow: none;
-            }
-            
-            .nav__auth .btn-login:hover {
-                background: #6c5ce7;
-                color: #fff;
-                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
-                transform: translateY(-2px);
-            }
-            
-            header.dark .nav__auth .btn-signup {
+            /* Dark mode */
+            header.dark .nav__auth .btn-signup,
+            header.dark .nav__auth .btn-login {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
                 color: #1a1a2e;
             }
             
-            header.dark .nav__auth .btn-signup:hover {
-                background: #a394f5;
-                border-color: #a394f5;
-            }
-            
-            header.dark .nav__auth .btn-login {
-                background: transparent;
-                color: #a394f5;
-                border-color: #a394f5;
-                box-shadow: none;
-            }
-            
+            header.dark .nav__auth .btn-signup:hover,
             header.dark .nav__auth .btn-login:hover {
                 background: #a394f5;
-                color: #1a1a2e;
-                box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
+                border-color: #a394f5;
             }
 
             /* ===== MODAL STYLES ===== */
