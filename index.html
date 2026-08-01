@@ -34,7 +34,7 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Nav styles */
+            /* Fix nav layout - exactly like your screenshot */
             .nav {
                 display: flex;
                 align-items: center;
@@ -56,6 +56,7 @@
                 gap: 0.5rem;
             }
             
+            /* Style buttons exactly like .nav__cta */
             .nav__auth .btn-auth {
                 display: inline-block;
                 padding: 0.5rem 1.5rem;
@@ -84,6 +85,12 @@
                 transform: translateY(-2px);
             }
             
+            .nav__auth .btn-auth:active {
+                transform: translateY(0px);
+                box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
+            }
+            
+            /* Login button - outline style like your screenshot */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
@@ -97,6 +104,7 @@
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
             }
             
+            /* Dark mode overrides */
             header.dark .nav__auth .btn-auth {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
@@ -121,6 +129,7 @@
                 box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
             }
             
+            /* Keep nav tabs and actions in line */
             .nav__tab {
                 white-space: nowrap;
             }
@@ -129,12 +138,24 @@
                 white-space: nowrap;
             }
             
+            /* Fix the nav__icon spacing */
             .nav__icon {
                 display: flex;
                 align-items: center;
             }
+            
+            /* Make sure the nav items don't wrap */
+            @media (max-width: 1024px) {
+                .nav {
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
+                }
+                .nav__actions {
+                    flex-shrink: 0;
+                }
+            }
 
-            /* Modal styles */
+            /* ===== MODAL STYLES ===== */
             .modal-overlay {
                 display: none;
                 position: fixed;
@@ -182,6 +203,7 @@
                 transition: color 0.2s;
                 padding: 0.25rem 0.5rem;
                 border-radius: 8px;
+                font-family: 'Lexend Deca', sans-serif;
             }
             
             .modal-close:hover {
@@ -250,6 +272,7 @@
                 background: #f8f8f8;
                 color: #1a1a2e;
                 outline: none;
+                box-sizing: border-box;
             }
             
             .form-group input:focus {
@@ -414,6 +437,7 @@
                             v-model="loginUsername" 
                             placeholder="Enter your username"
                             required
+                            autofocus
                         />
                     </div>
                     
@@ -490,7 +514,10 @@
                         },
                         switchToRegister() {
                             this.showLoginModal = false;
-                            this.handleSignUp();
+                            // Small delay to let modal close animation play
+                            setTimeout(() => {
+                                this.handleSignUp();
+                            }, 300);
                         }
                     }
                 });
