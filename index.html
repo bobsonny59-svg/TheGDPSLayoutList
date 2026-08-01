@@ -34,73 +34,43 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Fix header - make nav scrollable */
+            /* Make everything fit perfectly */
             header {
-                overflow: hidden;
-                position: relative;
-            }
-            
-            .nav-wrapper {
-                position: relative;
-                width: 100%;
-                overflow: visible;
+                padding: 0.5rem 1rem;
             }
             
             .nav {
                 display: flex;
                 align-items: center;
                 gap: 0.75rem;
-                padding: 0.5rem 0;
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                scroll-behavior: smooth;
-                white-space: nowrap;
                 width: 100%;
                 flex-wrap: nowrap;
-                scrollbar-width: thin;
             }
             
-            /* Custom scrollbar */
-            .nav::-webkit-scrollbar {
-                height: 4px;
-            }
-            
-            .nav::-webkit-scrollbar-track {
-                background: rgba(108, 92, 231, 0.1);
-                border-radius: 10px;
-            }
-            
-            .nav::-webkit-scrollbar-thumb {
-                background: #6c5ce7;
-                border-radius: 10px;
-            }
-            
-            .nav::-webkit-scrollbar-thumb:hover {
-                background: #5a4bd1;
-            }
-            
-            header.dark .nav::-webkit-scrollbar-track {
-                background: rgba(140, 124, 240, 0.1);
-            }
-            
-            header.dark .nav::-webkit-scrollbar-thumb {
-                background: #8c7cf0;
-            }
-            
-            header.dark .nav::-webkit-scrollbar-thumb:hover {
-                background: #a394f5;
-            }
-            
-            /* Force everything to stay in one line */
-            .nav__tab,
-            .nav__actions,
-            .nav__auth,
-            .nav__cta,
-            .nav__icon,
-            .btn-auth {
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
                 flex-shrink: 0;
-                white-space: nowrap;
+            }
+            
+            .logo h2 {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            
+            .logo p {
+                font-size: 0.7rem;
+                opacity: 0.6;
+                margin: 0;
+            }
+            
+            .nav__tab {
+                flex-shrink: 0;
+                padding: 0.4rem 0.8rem;
+                text-decoration: none;
+                color: inherit;
+                font-size: 0.85rem;
             }
             
             .nav__actions {
@@ -111,21 +81,25 @@
                 flex-shrink: 0;
             }
             
-            .nav__auth {
+            .nav__icon {
                 display: flex;
                 align-items: center;
-                gap: 0.5rem;
                 flex-shrink: 0;
+                padding: 0.3rem;
             }
             
-            /* Style buttons exactly like .nav__cta */
-            .nav__auth .btn-auth {
+            .nav__icon img {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .nav__cta {
                 display: inline-block;
-                padding: 0.5rem 1.5rem;
+                padding: 0.4rem 1.2rem;
                 border-radius: 2rem;
                 font-family: 'Lexend Deca', sans-serif;
                 font-weight: 500;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
                 line-height: 1.5;
                 text-align: center;
                 text-decoration: none;
@@ -141,19 +115,54 @@
                 flex-shrink: 0;
             }
             
-            .nav__auth .btn-auth:hover {
+            .nav__cta:hover {
                 background: #5a4bd1;
                 border-color: #5a4bd1;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
                 transform: translateY(-2px);
             }
             
-            .nav__auth .btn-auth:active {
-                transform: translateY(0px);
-                box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
+            .nav__auth {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                flex-shrink: 0;
             }
             
-            /* Login button - outline style */
+            .nav__auth .btn-auth {
+                display: inline-block;
+                padding: 0.4rem 1.2rem;
+                border-radius: 2rem;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.8rem;
+                line-height: 1.5;
+                text-align: center;
+                text-decoration: none;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: all 0.2s ease;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            /* Register button - filled */
+            .nav__auth .btn-signup {
+                background: #6c5ce7;
+                color: #fff;
+                border-color: #6c5ce7;
+                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
+            }
+            
+            .nav__auth .btn-signup:hover {
+                background: #5a4bd1;
+                border-color: #5a4bd1;
+                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            /* Login button - outline */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
@@ -165,16 +174,28 @@
                 background: #6c5ce7;
                 color: #fff;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+                transform: translateY(-2px);
             }
             
-            /* Dark mode overrides */
-            header.dark .nav__auth .btn-auth {
+            /* Dark mode */
+            header.dark .nav__cta {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
                 color: #1a1a2e;
             }
             
-            header.dark .nav__auth .btn-auth:hover {
+            header.dark .nav__cta:hover {
+                background: #a394f5;
+                border-color: #a394f5;
+            }
+            
+            header.dark .nav__auth .btn-signup {
+                background: #8c7cf0;
+                border-color: #8c7cf0;
+                color: #1a1a2e;
+            }
+            
+            header.dark .nav__auth .btn-signup:hover {
                 background: #a394f5;
                 border-color: #a394f5;
             }
@@ -192,64 +213,10 @@
                 box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
             }
             
-            .nav__cta {
+            /* Make sure text doesn't wrap */
+            .type-label-lg {
+                font-size: 0.85rem;
                 white-space: nowrap;
-                flex-shrink: 0;
-            }
-            
-            .nav__icon {
-                display: flex;
-                align-items: center;
-                flex-shrink: 0;
-            }
-
-            /* Scroll arrows */
-            .scroll-arrow {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 32px;
-                height: 32px;
-                background: rgba(108, 92, 231, 0.9);
-                color: white;
-                border: none;
-                border-radius: 50%;
-                cursor: pointer;
-                font-size: 18px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10;
-                transition: all 0.3s ease;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-                opacity: 0;
-                pointer-events: none;
-            }
-            
-            .scroll-arrow.visible {
-                opacity: 1;
-                pointer-events: auto;
-            }
-            
-            .scroll-arrow:hover {
-                background: #5a4bd1;
-                transform: translateY(-50%) scale(1.1);
-            }
-            
-            .scroll-arrow.left {
-                left: 0;
-            }
-            
-            .scroll-arrow.right {
-                right: 0;
-            }
-            
-            header.dark .scroll-arrow {
-                background: rgba(140, 124, 240, 0.9);
-            }
-            
-            header.dark .scroll-arrow:hover {
-                background: #a394f5;
             }
 
             /* ===== MODAL STYLES ===== */
@@ -481,45 +448,41 @@
                 <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
-            <div class="nav-wrapper" ref="navWrapper">
-                <nav class="nav" ref="navContainer" @scroll="updateArrows">
-                    <router-link class="nav__tab" to="/">
-                        <span class="type-label-lg">List</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/leaderboard">
-                        <span class="type-label-lg">Leaderboard</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/roulette">
-                        <span class="type-label-lg">Roulette</span>
-                    </router-link>
-                    <div class="nav__actions">
-                        <button
-                            class="nav__icon"
-                            @click.prevent="store.toggleDark()"
-                        >
-                            <img
-                                :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                                alt=""
-                            />
-                        </button>
-                        <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
-                            <img src="/assets/discord.svg" alt="Discord Logo" />
-                        </a>
-                        <a
-                            class="nav__cta type-label-lg"
-                            href="https://forms.gle/irLaSCGuXMbEwD28A"
-                            target="_blank"
-                            >Submit Record</a
-                        >
-                        <div class="nav__auth">
-                            <button class="btn-auth btn-login" @click="showLoginModal = true">Login</button>
-                            <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
-                        </div>
+            <nav class="nav">
+                <router-link class="nav__tab" to="/">
+                    <span class="type-label-lg">List</span>
+                </router-link>
+                <router-link class="nav__tab" to="/leaderboard">
+                    <span class="type-label-lg">Leaderboard</span>
+                </router-link>
+                <router-link class="nav__tab" to="/roulette">
+                    <span class="type-label-lg">Roulette</span>
+                </router-link>
+                <div class="nav__actions">
+                    <button
+                        class="nav__icon"
+                        @click.prevent="store.toggleDark()"
+                    >
+                        <img
+                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
+                            alt=""
+                        />
+                    </button>
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
+                        <img src="/assets/discord.svg" alt="Discord Logo" />
+                    </a>
+                    <a
+                        class="nav__cta type-label-lg"
+                        href="https://forms.gle/irLaSCGuXMbEwD28A"
+                        target="_blank"
+                        >Submit Record</a
+                    >
+                    <div class="nav__auth">
+                        <button class="btn-auth btn-login" @click="showLoginModal = true">Login</button>
+                        <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
                     </div>
-                </nav>
-                <button class="scroll-arrow left" ref="scrollLeft" @click="scrollNav('left')">‹</button>
-                <button class="scroll-arrow right" ref="scrollRight" @click="scrollNav('right')">›</button>
-            </div>
+                </div>
+            </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
 
@@ -619,55 +582,7 @@
                             setTimeout(() => {
                                 this.handleSignUp();
                             }, 300);
-                        },
-                        scrollNav(direction) {
-                            const container = this.$refs.navContainer;
-                            const scrollAmount = 300;
-                            if (direction === 'left') {
-                                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-                            } else {
-                                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-                            }
-                        },
-                        updateArrows() {
-                            const container = this.$refs.navContainer;
-                            const leftArrow = this.$refs.scrollLeft;
-                            const rightArrow = this.$refs.scrollRight;
-                            
-                            if (container.scrollLeft > 10) {
-                                leftArrow.classList.add('visible');
-                            } else {
-                                leftArrow.classList.remove('visible');
-                            }
-                            
-                            if (container.scrollLeft < container.scrollWidth - container.clientWidth - 10) {
-                                rightArrow.classList.add('visible');
-                            } else {
-                                rightArrow.classList.remove('visible');
-                            }
                         }
-                    },
-                    mounted() {
-                        // Initial check for arrows
-                        this.$nextTick(() => {
-                            this.updateArrows();
-                            
-                            // Also check on resize
-                            window.addEventListener('resize', this.updateArrows);
-                            
-                            // Check when nav changes
-                            const observer = new MutationObserver(() => {
-                                this.updateArrows();
-                            });
-                            observer.observe(this.$refs.navContainer, { 
-                                childList: true, 
-                                subtree: true,
-                                attributes: true
-                            });
-                        });
-                    },
-                    beforeDestroy() {
-                        window.removeEventListener('resize', this.updateArrows);
                     }
                 });
             })();
