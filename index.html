@@ -34,19 +34,20 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Fix nav actions layout - keep everything on one line */
+            /* Fix nav layout - exactly like your screenshot */
             .nav {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 width: 100%;
+                gap: 1rem;
             }
             
             .nav__actions {
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
-                flex-wrap: nowrap;
+                gap: 0.5rem;
+                margin-left: auto;
             }
             
             .nav__auth {
@@ -58,7 +59,7 @@
             /* Style buttons exactly like .nav__cta */
             .nav__auth .btn-auth {
                 display: inline-block;
-                padding: 0.45rem 1.2rem;
+                padding: 0.5rem 1.5rem;
                 border-radius: 2rem;
                 font-family: 'Lexend Deca', sans-serif;
                 font-weight: 500;
@@ -68,7 +69,7 @@
                 text-decoration: none;
                 cursor: pointer;
                 border: 1px solid transparent;
-                transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+                transition: all 0.2s ease;
                 letter-spacing: 0.3px;
                 white-space: nowrap;
                 background: #6c5ce7;
@@ -81,7 +82,7 @@
                 background: #5a4bd1;
                 border-color: #5a4bd1;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
-                transform: translateY(-1px);
+                transform: translateY(-2px);
             }
             
             .nav__auth .btn-auth:active {
@@ -89,7 +90,7 @@
                 box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
             }
             
-            /* Login button - outline style */
+            /* Login button - outline style like your screenshot */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
@@ -133,9 +134,25 @@
                 white-space: nowrap;
             }
             
-            /* Fix the nav__cta to match */
             .nav__cta {
                 white-space: nowrap;
+            }
+            
+            /* Fix the nav__icon spacing */
+            .nav__icon {
+                display: flex;
+                align-items: center;
+            }
+            
+            /* Make sure the nav items don't wrap */
+            @media (max-width: 1024px) {
+                .nav {
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
+                }
+                .nav__actions {
+                    flex-shrink: 0;
+                }
             }
         </style>
     </head>
@@ -175,8 +192,8 @@
                         >Submit Record</a
                     >
                     <div class="nav__auth">
-                        <button class="btn-auth btn-signup" @click="handleSignUp">Sign Up</button>
-                        <button class="btn-auth btn-login" @click="handleLogin">Log In</button>
+                        <button class="btn-auth btn-login" @click="handleLogin">Login</button>
+                        <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
                     </div>
                 </div>
             </nav>
@@ -213,7 +230,7 @@
                             this.authUsers.push(newUser);
                             localStorage.setItem('larpUsers', JSON.stringify(this.authUsers));
                             this.currentUser = newUser;
-                            alert(`Account created successfully! Welcome, ${newUser.username}. You are now logged in.`);
+                            alert(`Account created successfully! Welcome, ${newUser.username}!`);
                         },
                         handleLogin() {
                             const username = prompt('Enter your username:');
@@ -231,7 +248,7 @@
                                 this.currentUser = found;
                                 alert(`Welcome back, ${found.username}! You are now logged in.`);
                             } else {
-                                alert('Invalid username or password. Please try again or sign up.');
+                                alert('Invalid username or password. Please try again or register.');
                             }
                         }
                     }
