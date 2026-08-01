@@ -34,99 +34,257 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Make everything fit perfectly */
-            header {
-                padding: 0.5rem 1rem;
+            /* Sidebar styles */
+            .hamburger {
+                display: none;
+                flex-direction: column;
+                gap: 4px;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.3rem;
+                border-radius: 6px;
+                transition: background 0.2s;
+                margin-right: 0.5rem;
             }
             
+            .hamburger:hover {
+                background: rgba(108, 92, 231, 0.1);
+            }
+            
+            .hamburger span {
+                display: block;
+                width: 24px;
+                height: 2px;
+                background: #1a1a2e;
+                transition: all 0.3s ease;
+                border-radius: 2px;
+            }
+            
+            header.dark .hamburger span {
+                background: #fff;
+            }
+            
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+            
+            .header-left {
+                display: flex;
+                align-items: center;
+            }
+            
+            /* Sidebar */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -300px;
+                width: 280px;
+                height: 100vh;
+                background: #ffffff;
+                box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s ease;
+                z-index: 999;
+                padding: 2rem 1.5rem;
+                overflow-y: auto;
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+            
+            header.dark .sidebar {
+                background: #1a1a2e;
+                box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
+            }
+            
+            .sidebar-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            header.dark .sidebar-header {
+                border-bottom: 1px solid #2d2d3f;
+            }
+            
+            .sidebar-header h3 {
+                font-size: 1.2rem;
+                color: #1a1a2e;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            
+            header.dark .sidebar-header h3 {
+                color: #fff;
+            }
+            
+            .sidebar-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #999;
+                padding: 0.2rem 0.5rem;
+                border-radius: 6px;
+                transition: background 0.2s;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            
+            .sidebar-close:hover {
+                background: rgba(0, 0, 0, 0.05);
+            }
+            
+            header.dark .sidebar-close {
+                color: #666;
+            }
+            
+            header.dark .sidebar-close:hover {
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .sidebar-nav {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .sidebar-nav a {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem 1rem;
+                border-radius: 12px;
+                text-decoration: none;
+                color: #555;
+                font-weight: 500;
+                font-size: 0.95rem;
+                transition: all 0.2s;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            
+            .sidebar-nav a:hover {
+                background: rgba(108, 92, 231, 0.08);
+                color: #6c5ce7;
+            }
+            
+            .sidebar-nav a.router-link-active {
+                background: rgba(108, 92, 231, 0.12);
+                color: #6c5ce7;
+            }
+            
+            header.dark .sidebar-nav a {
+                color: #ccc;
+            }
+            
+            header.dark .sidebar-nav a:hover {
+                background: rgba(140, 124, 240, 0.1);
+                color: #a394f5;
+            }
+            
+            header.dark .sidebar-nav a.router-link-active {
+                background: rgba(140, 124, 240, 0.15);
+                color: #a394f5;
+            }
+            
+            .sidebar-divider {
+                border: none;
+                border-top: 1px solid #e0e0e0;
+                margin: 1rem 0;
+            }
+            
+            header.dark .sidebar-divider {
+                border-top: 1px solid #2d2d3f;
+            }
+            
+            .sidebar-submit {
+                margin-top: 1rem;
+                padding: 0.75rem 1rem;
+                background: #6c5ce7;
+                color: #fff;
+                border: none;
+                border-radius: 12px;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                width: 100%;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+            }
+            
+            .sidebar-submit:hover {
+                background: #5a4bd1;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+            }
+            
+            header.dark .sidebar-submit {
+                background: #8c7cf0;
+                color: #1a1a2e;
+            }
+            
+            header.dark .sidebar-submit:hover {
+                background: #a394f5;
+            }
+            
+            /* Overlay */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.3s ease;
+            }
+            
+            .sidebar-overlay.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            
+            /* Show hamburger on smaller screens */
+            @media (max-width: 1024px) {
+                .hamburger {
+                    display: flex;
+                }
+            }
+            
+            /* Make nav items fit */
             .nav {
                 display: flex;
                 align-items: center;
-                gap: 0.75rem;
-                width: 100%;
-                flex-wrap: nowrap;
-            }
-            
-            .logo {
-                display: flex;
-                align-items: center;
                 gap: 0.5rem;
-                flex-shrink: 0;
-            }
-            
-            .logo h2 {
-                font-size: 1.2rem;
-                margin: 0;
-            }
-            
-            .logo p {
-                font-size: 0.7rem;
-                opacity: 0.6;
-                margin: 0;
-            }
-            
-            .nav__tab {
-                flex-shrink: 0;
-                padding: 0.4rem 0.8rem;
-                text-decoration: none;
-                color: inherit;
-                font-size: 0.85rem;
+                flex-wrap: nowrap;
             }
             
             .nav__actions {
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
+                flex-wrap: nowrap;
                 margin-left: auto;
-                flex-shrink: 0;
-            }
-            
-            .nav__icon {
-                display: flex;
-                align-items: center;
-                flex-shrink: 0;
-                padding: 0.3rem;
-            }
-            
-            .nav__icon img {
-                width: 20px;
-                height: 20px;
-            }
-            
-            .nav__cta {
-                display: inline-block;
-                padding: 0.4rem 1.2rem;
-                border-radius: 2rem;
-                font-family: 'Lexend Deca', sans-serif;
-                font-weight: 500;
-                font-size: 0.8rem;
-                line-height: 1.5;
-                text-align: center;
-                text-decoration: none;
-                cursor: pointer;
-                border: 1px solid transparent;
-                transition: all 0.2s ease;
-                letter-spacing: 0.3px;
-                white-space: nowrap;
-                background: #6c5ce7;
-                color: #fff;
-                border-color: #6c5ce7;
-                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
-                flex-shrink: 0;
-            }
-            
-            .nav__cta:hover {
-                background: #5a4bd1;
-                border-color: #5a4bd1;
-                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
-                transform: translateY(-2px);
             }
             
             .nav__auth {
                 display: flex;
                 align-items: center;
                 gap: 0.4rem;
-                flex-shrink: 0;
             }
             
             .nav__auth .btn-auth {
@@ -135,7 +293,7 @@
                 border-radius: 2rem;
                 font-family: 'Lexend Deca', sans-serif;
                 font-weight: 500;
-                font-size: 0.8rem;
+                font-size: 0.85rem;
                 line-height: 1.5;
                 text-align: center;
                 text-decoration: none;
@@ -147,7 +305,6 @@
                 flex-shrink: 0;
             }
             
-            /* Register button - filled */
             .nav__auth .btn-signup {
                 background: #6c5ce7;
                 color: #fff;
@@ -162,7 +319,6 @@
                 transform: translateY(-2px);
             }
             
-            /* Login button - outline */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
@@ -175,18 +331,6 @@
                 color: #fff;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
                 transform: translateY(-2px);
-            }
-            
-            /* Dark mode */
-            header.dark .nav__cta {
-                background: #8c7cf0;
-                border-color: #8c7cf0;
-                color: #1a1a2e;
-            }
-            
-            header.dark .nav__cta:hover {
-                background: #a394f5;
-                border-color: #a394f5;
             }
             
             header.dark .nav__auth .btn-signup {
@@ -211,12 +355,6 @@
                 background: #a394f5;
                 color: #1a1a2e;
                 box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
-            }
-            
-            /* Make sure text doesn't wrap */
-            .type-label-lg {
-                font-size: 0.85rem;
-                white-space: nowrap;
             }
 
             /* ===== MODAL STYLES ===== */
@@ -444,9 +582,16 @@
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
-            <div class="logo">
-                <h2>Larp List</h2>
-                <p>v1.0.0</p>
+            <div class="header-left">
+                <button class="hamburger" :class="{ active: sidebarOpen }" @click="toggleSidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="logo">
+                    <h2>Larp List</h2>
+                    <p>v1.0.0</p>
+                </div>
             </div>
             <nav class="nav">
                 <router-link class="nav__tab" to="/">
@@ -484,6 +629,26 @@
                 </div>
             </nav>
         </header>
+
+        <!-- Sidebar -->
+        <div class="sidebar" :class="{ open: sidebarOpen }">
+            <div class="sidebar-header">
+                <h3>Larp List</h3>
+                <button class="sidebar-close" @click="sidebarOpen = false">✕</button>
+            </div>
+            <nav class="sidebar-nav">
+                <router-link to="/" @click="sidebarOpen = false">📋 List</router-link>
+                <router-link to="/leaderboard" @click="sidebarOpen = false">🏆 Leaderboard</router-link>
+                <router-link to="/roulette" @click="sidebarOpen = false">🎲 Roulette</router-link>
+                <hr class="sidebar-divider" />
+                <a href="https://discord.gg/W9PhXXMSd" target="_blank">💬 Discord</a>
+                <a href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" class="sidebar-submit">📝 Submit Record</a>
+            </nav>
+        </div>
+
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" :class="{ active: sidebarOpen }" @click="sidebarOpen = false"></div>
+
         <router-view :class="{ dark: store.dark }"></router-view>
 
         <!-- Login Modal -->
@@ -535,12 +700,17 @@
                             currentUser: null,
                             showLoginModal: false,
                             loginUsername: '',
-                            loginPassword: ''
+                            loginPassword: '',
+                            sidebarOpen: false
                         }
                     },
                     methods: {
+                        toggleSidebar() {
+                            this.sidebarOpen = !this.sidebarOpen;
+                        },
                         handleSignUp() {
                             this.showLoginModal = false;
+                            this.sidebarOpen = false;
                             const username = prompt('Create a username (at least 3 characters):');
                             if (!username || username.trim().length < 3) {
                                 alert('Username must be at least 3 characters.');
