@@ -34,7 +34,158 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Style auth buttons exactly like nav__cta */
+            /* Make it look like the screenshot */
+            header {
+                padding: 0.5rem 2rem;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            header.dark {
+                border-bottom: 1px solid #2d2d3f;
+            }
+            
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .logo h2 {
+                font-size: 1.4rem;
+                font-weight: 700;
+                color: #1a1a2e;
+            }
+            
+            header.dark .logo h2 {
+                color: #fff;
+            }
+            
+            .logo p {
+                font-size: 0.7rem;
+                opacity: 0.5;
+                color: #1a1a2e;
+            }
+            
+            header.dark .logo p {
+                color: #aaa;
+            }
+            
+            .nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            
+            .nav__tabs {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .nav__tab {
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                color: #555;
+                font-weight: 500;
+                font-size: 0.9rem;
+                border-radius: 8px;
+                transition: all 0.2s;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            
+            .nav__tab:hover {
+                background: rgba(108, 92, 231, 0.08);
+                color: #6c5ce7;
+            }
+            
+            .nav__tab.router-link-active {
+                background: rgba(108, 92, 231, 0.12);
+                color: #6c5ce7;
+            }
+            
+            header.dark .nav__tab {
+                color: #ccc;
+            }
+            
+            header.dark .nav__tab:hover {
+                background: rgba(140, 124, 240, 0.1);
+                color: #a394f5;
+            }
+            
+            header.dark .nav__tab.router-link-active {
+                background: rgba(140, 124, 240, 0.15);
+                color: #a394f5;
+            }
+            
+            .nav__actions {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                flex-shrink: 0;
+            }
+            
+            .nav__icon {
+                display: flex;
+                align-items: center;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.3rem;
+                border-radius: 6px;
+                transition: background 0.2s;
+            }
+            
+            .nav__icon:hover {
+                background: rgba(108, 92, 231, 0.1);
+            }
+            
+            .nav__icon img {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .nav__cta {
+                display: inline-block;
+                padding: 0.5rem 1.5rem;
+                border-radius: 2rem;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                text-align: center;
+                text-decoration: none;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: all 0.2s ease;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                background: #6c5ce7;
+                color: #fff;
+                border-color: #6c5ce7;
+                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
+                flex-shrink: 0;
+            }
+            
+            .nav__cta:hover {
+                background: #5a4bd1;
+                border-color: #5a4bd1;
+                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            header.dark .nav__cta {
+                background: #8c7cf0;
+                border-color: #8c7cf0;
+                color: #1a1a2e;
+            }
+            
+            header.dark .nav__cta:hover {
+                background: #a394f5;
+                border-color: #a394f5;
+            }
+            
             .nav__auth {
                 display: flex;
                 align-items: center;
@@ -43,7 +194,7 @@
             
             .nav__auth .btn-auth {
                 display: inline-block;
-                padding: 0.45rem 1.2rem;
+                padding: 0.5rem 1.5rem;
                 border-radius: 2rem;
                 font-family: 'Lexend Deca', sans-serif;
                 font-weight: 500;
@@ -59,35 +210,56 @@
                 flex-shrink: 0;
             }
             
-            /* Both buttons use the same style as nav__cta */
-            .nav__auth .btn-signup,
-            .nav__auth .btn-login {
+            .nav__auth .btn-signup {
                 background: #6c5ce7;
                 color: #fff;
                 border-color: #6c5ce7;
                 box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
             }
             
-            .nav__auth .btn-signup:hover,
-            .nav__auth .btn-login:hover {
+            .nav__auth .btn-signup:hover {
                 background: #5a4bd1;
                 border-color: #5a4bd1;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
                 transform: translateY(-2px);
             }
             
-            /* Dark mode */
-            header.dark .nav__auth .btn-signup,
-            header.dark .nav__auth .btn-login {
+            .nav__auth .btn-login {
+                background: transparent;
+                color: #6c5ce7;
+                border-color: #6c5ce7;
+                box-shadow: none;
+            }
+            
+            .nav__auth .btn-login:hover {
+                background: #6c5ce7;
+                color: #fff;
+                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+                transform: translateY(-2px);
+            }
+            
+            header.dark .nav__auth .btn-signup {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
                 color: #1a1a2e;
             }
             
-            header.dark .nav__auth .btn-signup:hover,
-            header.dark .nav__auth .btn-login:hover {
+            header.dark .nav__auth .btn-signup:hover {
                 background: #a394f5;
                 border-color: #a394f5;
+            }
+            
+            header.dark .nav__auth .btn-login {
+                background: transparent;
+                color: #a394f5;
+                border-color: #a394f5;
+                box-shadow: none;
+            }
+            
+            header.dark .nav__auth .btn-login:hover {
+                background: #a394f5;
+                color: #1a1a2e;
+                box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
             }
 
             /* ===== MODAL STYLES ===== */
@@ -320,15 +492,17 @@
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
+                <div class="nav__tabs">
+                    <router-link class="nav__tab" to="/">
+                        <span class="type-label-lg">List</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/leaderboard">
+                        <span class="type-label-lg">Leaderboard</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/roulette">
+                        <span class="type-label-lg">Roulette</span>
+                    </router-link>
+                </div>
                 <div class="nav__actions">
                     <button
                         class="nav__icon"
