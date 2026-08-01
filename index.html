@@ -34,13 +34,28 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* make auth buttons look exactly like .nav__cta */
+            /* Fix nav actions layout - keep everything on one line */
+            .nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+            
+            .nav__actions {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                flex-wrap: nowrap;
+            }
+            
             .nav__auth {
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
-                margin-left: 0.5rem;
             }
+            
+            /* Style buttons exactly like .nav__cta */
             .nav__auth .btn-auth {
                 display: inline-block;
                 padding: 0.45rem 1.2rem;
@@ -54,64 +69,73 @@
                 cursor: pointer;
                 border: 1px solid transparent;
                 transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
-                background: var(--nav-cta-bg, #6c5ce7);
-                color: var(--nav-cta-color, #fff);
-                border-color: var(--nav-cta-border, #6c5ce7);
                 letter-spacing: 0.3px;
-                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
+                white-space: nowrap;
                 background: #6c5ce7;
                 color: #fff;
                 border-color: #6c5ce7;
+                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
             }
+            
             .nav__auth .btn-auth:hover {
                 background: #5a4bd1;
                 border-color: #5a4bd1;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
                 transform: translateY(-1px);
             }
+            
             .nav__auth .btn-auth:active {
                 transform: translateY(0px);
                 box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
             }
-            /* login variant: subtle outline to distinguish, but still matching cta style */
+            
+            /* Login button - outline style */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
                 border-color: #6c5ce7;
                 box-shadow: none;
             }
+            
             .nav__auth .btn-login:hover {
                 background: #6c5ce7;
                 color: #fff;
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
             }
-            /* dark mode overrides to keep consistency with .nav__cta */
+            
+            /* Dark mode overrides */
             header.dark .nav__auth .btn-auth {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
                 color: #1a1a2e;
             }
+            
             header.dark .nav__auth .btn-auth:hover {
                 background: #a394f5;
                 border-color: #a394f5;
             }
+            
             header.dark .nav__auth .btn-login {
                 background: transparent;
                 color: #a394f5;
                 border-color: #a394f5;
                 box-shadow: none;
             }
+            
             header.dark .nav__auth .btn-login:hover {
                 background: #a394f5;
                 color: #1a1a2e;
                 box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
             }
-            /* make sure nav__actions flex-wrap nicely if needed */
-            .nav__actions {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                flex-wrap: wrap;
+            
+            /* Keep nav tabs and actions in line */
+            .nav__tab {
+                white-space: nowrap;
+            }
+            
+            /* Fix the nav__cta to match */
+            .nav__cta {
+                white-space: nowrap;
             }
         </style>
     </head>
@@ -141,18 +165,15 @@
                             alt=""
                         />
                     </button>
-                    <!-- Replace the '#' with your discord server's invite-->
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <!-- List record submission form -->
                     <a
                         class="nav__cta type-label-lg"
                         href="https://forms.gle/irLaSCGuXMbEwD28A"
                         target="_blank"
                         >Submit Record</a
                     >
-                    <!-- TWO NEW BUTTONS: Sign Up & Log In, styled like .nav__cta -->
                     <div class="nav__auth">
                         <button class="btn-auth btn-signup" @click="handleSignUp">Sign Up</button>
                         <button class="btn-auth btn-login" @click="handleLogin">Log In</button>
@@ -162,22 +183,17 @@
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
 
-        <!-- Vue app extensions for signup/login logic with account creation simulation -->
         <script>
             (function() {
-                // Use a global mixin to add methods to the existing root component (from main.js)
-                // This ensures the buttons work and we can simulate account creation.
                 Vue.mixin({
                     data() {
                         return {
-                            // We'll store a simple "registered" flag to simulate accounts
                             authUsers: JSON.parse(localStorage.getItem('larpUsers')) || [],
                             currentUser: null
                         }
                     },
                     methods: {
                         handleSignUp() {
-                            // Simulate account creation: prompt for username/password
                             const username = prompt('Create a username (at least 3 characters):');
                             if (!username || username.trim().length < 3) {
                                 alert('Username must be at least 3 characters.');
@@ -188,23 +204,18 @@
                                 alert('Password must be at least 4 characters.');
                                 return;
                             }
-                            // Check if username already exists
                             const existing = this.authUsers.find(u => u.username === username.trim());
                             if (existing) {
                                 alert('Username already taken. Please choose another.');
                                 return;
                             }
-                            // Save new user
                             const newUser = { username: username.trim(), password: password.trim() };
                             this.authUsers.push(newUser);
                             localStorage.setItem('larpUsers', JSON.stringify(this.authUsers));
                             this.currentUser = newUser;
                             alert(`Account created successfully! Welcome, ${newUser.username}. You are now logged in.`);
-                            // Optionally update UI: we could emit an event or just show a message.
-                            // For demo we just update the state.
                         },
                         handleLogin() {
-                            // Simulate login: prompt for credentials
                             const username = prompt('Enter your username:');
                             if (!username || username.trim() === '') {
                                 alert('Username is required.');
@@ -225,7 +236,6 @@
                         }
                     }
                 });
-                console.log('Sign Up & Log In buttons with account simulation ready.');
             })();
         </script>
     </body>
