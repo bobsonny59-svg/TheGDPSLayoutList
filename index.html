@@ -33,12 +33,83 @@
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
+        <!-- Additional inline style to ensure buttons align nicely -->
+        <style>
+            .nav__auth {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin-left: 0.5rem;
+            }
+            .nav__auth .btn-auth {
+                background: transparent;
+                border: 1px solid var(--color-border, #ccc);
+                padding: 0.4rem 1rem;
+                border-radius: 2rem;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.9rem;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s, border-color 0.2s;
+                color: inherit;
+                background: var(--color-bg-btn, #f0f0f0);
+                border-color: var(--color-border-btn, #ccc);
+            }
+            .nav__auth .btn-auth:hover {
+                background: var(--color-bg-btn-hover, #e0e0e0);
+                border-color: var(--color-border-btn-hover, #999);
+            }
+            .nav__auth .btn-signup {
+                background: #6c5ce7;
+                border-color: #6c5ce7;
+                color: white;
+            }
+            .nav__auth .btn-signup:hover {
+                background: #5a4bd1;
+                border-color: #5a4bd1;
+            }
+            .nav__auth .btn-login {
+                background: transparent;
+                border-color: #6c5ce7;
+                color: #6c5ce7;
+            }
+            .nav__auth .btn-login:hover {
+                background: #6c5ce7;
+                color: white;
+            }
+            /* dark mode adjustments (if .dark class is applied) */
+            header.dark .nav__auth .btn-auth {
+                --color-bg-btn: #2d2d3f;
+                --color-border-btn: #555;
+                color: #eee;
+            }
+            header.dark .nav__auth .btn-auth:hover {
+                --color-bg-btn-hover: #3d3d5f;
+                --color-border-btn-hover: #777;
+            }
+            header.dark .nav__auth .btn-login {
+                border-color: #8c7cf0;
+                color: #8c7cf0;
+            }
+            header.dark .nav__auth .btn-login:hover {
+                background: #8c7cf0;
+                color: #1a1a2e;
+            }
+            header.dark .nav__auth .btn-signup {
+                background: #8c7cf0;
+                border-color: #8c7cf0;
+                color: #1a1a2e;
+            }
+            header.dark .nav__auth .btn-signup:hover {
+                background: #a394f5;
+                border-color: #a394f5;
+            }
+        </style>
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
             <div class="logo">
-                <h2>Larp List
-            </h2>
+                <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">
@@ -72,9 +143,72 @@
                         target="_blank"
                         >Submit Record</a
                     >
+                    <!-- TWO NEW BUTTONS: Sign Up & Log In -->
+                    <div class="nav__auth">
+                        <button class="btn-auth btn-signup" @click="handleSignUp">Sign Up</button>
+                        <button class="btn-auth btn-login" @click="handleLogin">Log In</button>
+                    </div>
                 </div>
             </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
+
+        <!-- Simple Vue app to handle button clicks (demo) -->
+        <script>
+            (function() {
+                // Wait for Vue to be available and app instance
+                const app = Vue.createApp({
+                    data() {
+                        return {
+                            // store is already provided globally via main.js, but we need to reference it
+                        }
+                    },
+                    methods: {
+                        handleSignUp() {
+                            alert('Sign Up button clicked – redirect to sign-up page or modal.');
+                            // Replace with actual sign-up logic
+                        },
+                        handleLogin() {
+                            alert('Log In button clicked – redirect to login page or modal.');
+                            // Replace with actual login logic
+                        }
+                    }
+                });
+                // Mount to #app (but we don't want to override existing router-view etc.)
+                // We'll just add methods to the existing app instance if possible.
+                // Since main.js already creates and mounts the app, we extend it.
+                // For simplicity, we attach methods to the global Vue instance.
+                // A better approach: use composition API or mixin.
+                // But here we just make sure the methods are available in the template.
+                // The template uses @click="handleSignUp" and @click="handleLogin"
+                // which will be resolved in the root component's methods.
+                // Since we're in a module, we can patch the existing app.
+                // However, easier: we define a global mixin or use the existing store.
+                // We'll just add methods to the component that is already mounted.
+                // But we can't easily get the root instance. Instead, we use a global mixin.
+                const existingApp = Vue.createApp({}); // placeholder
+                // Actually the main.js mounts the app. To keep it simple, we use a global mixin.
+                // But the template is inside the #app which is already controlled by main.js.
+                // So we can safely add a mixin to the existing app.
+                // We'll use a small hack: since we're in a script tag after the app is defined,
+                // we can extend the component options.
+                // But main.js uses `createApp` and mounts, we cannot easily modify it.
+                // So we use a global mixin that adds the methods.
+                Vue.mixin({
+                    methods: {
+                        handleSignUp() {
+                            alert('Sign Up – redirect to sign-up page.');
+                        },
+                        handleLogin() {
+                            alert('Log In – redirect to login page.');
+                        }
+                    }
+                });
+                // Now the existing app (from main.js) will have these methods.
+                // However, if the app already has a `methods` object, the mixin will merge.
+                // This is safe because we only add new methods.
+                console.log('Sign up & Log in buttons added.');
+            })();
+        </script>
     </body>
 </html>
