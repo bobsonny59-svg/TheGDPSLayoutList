@@ -34,19 +34,53 @@
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
         <style>
-            /* Nav styles */
+            /* Fix header to allow scrolling */
+            header {
+                overflow: visible;
+                position: relative;
+            }
+            
             .nav {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                width: 100%;
                 gap: 1rem;
+                width: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 0.5rem 0;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+            
+            /* Hide scrollbar but keep functionality */
+            .nav::-webkit-scrollbar {
+                height: 4px;
+            }
+            
+            .nav::-webkit-scrollbar-track {
+                background: transparent;
+            }
+            
+            .nav::-webkit-scrollbar-thumb {
+                background: #6c5ce7;
+                border-radius: 10px;
+            }
+            
+            header.dark .nav::-webkit-scrollbar-thumb {
+                background: #8c7cf0;
+            }
+            
+            /* Keep nav tabs and actions in line */
+            .nav__tab {
+                white-space: nowrap;
+                flex-shrink: 0;
             }
             
             .nav__actions {
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
+                flex-shrink: 0;
                 margin-left: auto;
             }
             
@@ -54,8 +88,10 @@
                 display: flex;
                 align-items: center;
                 gap: 0.5rem;
+                flex-shrink: 0;
             }
             
+            /* Style buttons exactly like .nav__cta */
             .nav__auth .btn-auth {
                 display: inline-block;
                 padding: 0.5rem 1.5rem;
@@ -75,6 +111,7 @@
                 color: #fff;
                 border-color: #6c5ce7;
                 box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
+                flex-shrink: 0;
             }
             
             .nav__auth .btn-auth:hover {
@@ -84,6 +121,12 @@
                 transform: translateY(-2px);
             }
             
+            .nav__auth .btn-auth:active {
+                transform: translateY(0px);
+                box-shadow: 0 2px 4px rgba(108, 92, 231, 0.2);
+            }
+            
+            /* Login button - outline style */
             .nav__auth .btn-login {
                 background: transparent;
                 color: #6c5ce7;
@@ -97,6 +140,7 @@
                 box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
             }
             
+            /* Dark mode overrides */
             header.dark .nav__auth .btn-auth {
                 background: #8c7cf0;
                 border-color: #8c7cf0;
@@ -121,20 +165,70 @@
                 box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
             }
             
-            .nav__tab {
-                white-space: nowrap;
-            }
-            
             .nav__cta {
                 white-space: nowrap;
+                flex-shrink: 0;
             }
             
             .nav__icon {
                 display: flex;
                 align-items: center;
+                flex-shrink: 0;
+            }
+            
+            /* Scroll indicators */
+            .nav-scroll-indicator {
+                display: none;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 30px;
+                height: 30px;
+                background: rgba(108, 92, 231, 0.9);
+                border-radius: 50%;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-size: 18px;
+                z-index: 10;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            }
+            
+            .nav-scroll-indicator:hover {
+                background: #5a4bd1;
+                transform: translateY(-50%) scale(1.1);
+            }
+            
+            .nav-scroll-indicator.left {
+                left: 5px;
+            }
+            
+            .nav-scroll-indicator.right {
+                right: 5px;
+            }
+            
+            header.dark .nav-scroll-indicator {
+                background: rgba(140, 124, 240, 0.9);
+            }
+            
+            header.dark .nav-scroll-indicator:hover {
+                background: #a394f5;
+            }
+            
+            /* Show scroll indicators when needed */
+            .nav-wrapper {
+                position: relative;
+                width: 100%;
+            }
+            
+            .nav-wrapper.has-scroll .nav-scroll-indicator {
+                display: flex;
             }
 
-            /* Modal styles */
+            /* ===== MODAL STYLES ===== */
             .modal-overlay {
                 display: none;
                 position: fixed;
@@ -163,6 +257,7 @@
                 box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
                 animation: slideUp 0.3s ease;
                 position: relative;
+                margin: 1rem;
             }
             
             header.dark .modal {
@@ -182,6 +277,7 @@
                 transition: color 0.2s;
                 padding: 0.25rem 0.5rem;
                 border-radius: 8px;
+                font-family: 'Lexend Deca', sans-serif;
             }
             
             .modal-close:hover {
@@ -250,6 +346,7 @@
                 background: #f8f8f8;
                 color: #1a1a2e;
                 outline: none;
+                box-sizing: border-box;
             }
             
             .form-group input:focus {
@@ -360,41 +457,45 @@
                 <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
-            <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
-                <div class="nav__actions">
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                        />
-                    </button>
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
-                    </a>
-                    <a
-                        class="nav__cta type-label-lg"
-                        href="https://forms.gle/irLaSCGuXMbEwD28A"
-                        target="_blank"
-                        >Submit Record</a
-                    >
-                    <div class="nav__auth">
-                        <button class="btn-auth btn-login" @click="showLoginModal = true">Login</button>
-                        <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
+            <div class="nav-wrapper" ref="navWrapper">
+                <nav class="nav" ref="navContainer">
+                    <router-link class="nav__tab" to="/">
+                        <span class="type-label-lg">List</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/leaderboard">
+                        <span class="type-label-lg">Leaderboard</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/roulette">
+                        <span class="type-label-lg">Roulette</span>
+                    </router-link>
+                    <div class="nav__actions">
+                        <button
+                            class="nav__icon"
+                            @click.prevent="store.toggleDark()"
+                        >
+                            <img
+                                :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
+                                alt=""
+                            />
+                        </button>
+                        <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
+                            <img src="/assets/discord.svg" alt="Discord Logo" />
+                        </a>
+                        <a
+                            class="nav__cta type-label-lg"
+                            href="https://forms.gle/irLaSCGuXMbEwD28A"
+                            target="_blank"
+                            >Submit Record</a
+                        >
+                        <div class="nav__auth">
+                            <button class="btn-auth btn-login" @click="showLoginModal = true">Login</button>
+                            <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
+                <button class="nav-scroll-indicator left" @click="scrollNav('left')" ref="scrollLeft">‹</button>
+                <button class="nav-scroll-indicator right" @click="scrollNav('right')" ref="scrollRight">›</button>
+            </div>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
 
@@ -414,6 +515,7 @@
                             v-model="loginUsername" 
                             placeholder="Enter your username"
                             required
+                            autofocus
                         />
                     </div>
                     
@@ -490,8 +592,39 @@
                         },
                         switchToRegister() {
                             this.showLoginModal = false;
-                            this.handleSignUp();
+                            setTimeout(() => {
+                                this.handleSignUp();
+                            }, 300);
+                        },
+                        scrollNav(direction) {
+                            const container = this.$refs.navContainer;
+                            const scrollAmount = 200;
+                            if (direction === 'left') {
+                                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                            } else {
+                                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                            }
                         }
+                    },
+                    mounted() {
+                        // Check if scrolling is needed
+                        const checkScroll = () => {
+                            const container = this.$refs.navContainer;
+                            const wrapper = this.$refs.navWrapper;
+                            if (container.scrollWidth > container.clientWidth) {
+                                wrapper.classList.add('has-scroll');
+                            } else {
+                                wrapper.classList.remove('has-scroll');
+                            }
+                        };
+                        
+                        // Check on mount and resize
+                        this.$nextTick(checkScroll);
+                        window.addEventListener('resize', checkScroll);
+                        
+                        // Also check when nav changes
+                        const observer = new MutationObserver(checkScroll);
+                        observer.observe(this.$refs.navContainer, { childList: true, subtree: true });
                     }
                 });
             })();
