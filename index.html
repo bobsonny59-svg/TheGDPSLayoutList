@@ -33,12 +33,311 @@
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         <script type="module" src="/js/main.js"></script>
+        <style>
+            /* Add styles for auth buttons */
+            .nav__auth {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+            }
+            
+            .nav__auth .btn-auth {
+                display: inline-block;
+                padding: 0.4rem 1.2rem;
+                border-radius: 2rem;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.85rem;
+                line-height: 1.5;
+                text-align: center;
+                text-decoration: none;
+                cursor: pointer;
+                border: 1px solid transparent;
+                transition: all 0.2s ease;
+                letter-spacing: 0.3px;
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .nav__auth .btn-signup {
+                background: #6c5ce7;
+                color: #fff;
+                border-color: #6c5ce7;
+                box-shadow: 0 2px 6px rgba(108, 92, 231, 0.25);
+            }
+            
+            .nav__auth .btn-signup:hover {
+                background: #5a4bd1;
+                border-color: #5a4bd1;
+                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.35);
+                transform: translateY(-2px);
+            }
+            
+            .nav__auth .btn-login {
+                background: transparent;
+                color: #6c5ce7;
+                border-color: #6c5ce7;
+                box-shadow: none;
+            }
+            
+            .nav__auth .btn-login:hover {
+                background: #6c5ce7;
+                color: #fff;
+                box-shadow: 0 4px 10px rgba(108, 92, 231, 0.3);
+                transform: translateY(-2px);
+            }
+            
+            header.dark .nav__auth .btn-signup {
+                background: #8c7cf0;
+                border-color: #8c7cf0;
+                color: #1a1a2e;
+            }
+            
+            header.dark .nav__auth .btn-signup:hover {
+                background: #a394f5;
+                border-color: #a394f5;
+            }
+            
+            header.dark .nav__auth .btn-login {
+                background: transparent;
+                color: #a394f5;
+                border-color: #a394f5;
+                box-shadow: none;
+            }
+            
+            header.dark .nav__auth .btn-login:hover {
+                background: #a394f5;
+                color: #1a1a2e;
+                box-shadow: 0 4px 10px rgba(163, 148, 245, 0.3);
+            }
+
+            /* ===== MODAL STYLES ===== */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(8px);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .modal-overlay.active {
+                display: flex;
+            }
+            
+            .modal {
+                background: #ffffff;
+                border-radius: 24px;
+                padding: 2.5rem;
+                width: 100%;
+                max-width: 420px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                animation: slideUp 0.3s ease;
+                position: relative;
+                margin: 1rem;
+            }
+            
+            header.dark .modal {
+                background: #1a1a2e;
+                border: 1px solid #2d2d3f;
+            }
+            
+            .modal-close {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #999;
+                transition: color 0.2s;
+                padding: 0.25rem 0.5rem;
+                border-radius: 8px;
+                font-family: 'Lexend Deca', sans-serif;
+            }
+            
+            .modal-close:hover {
+                color: #333;
+            }
+            
+            header.dark .modal-close {
+                color: #666;
+            }
+            
+            header.dark .modal-close:hover {
+                color: #fff;
+            }
+            
+            .modal-title {
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 700;
+                font-size: 1.8rem;
+                color: #1a1a2e;
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+            
+            header.dark .modal-title {
+                color: #fff;
+            }
+            
+            .modal-subtitle {
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.9rem;
+                color: #888;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+            
+            header.dark .modal-subtitle {
+                color: #aaa;
+            }
+            
+            .form-group {
+                margin-bottom: 1.5rem;
+            }
+            
+            .form-group label {
+                display: block;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 500;
+                font-size: 0.85rem;
+                color: #555;
+                margin-bottom: 0.4rem;
+            }
+            
+            header.dark .form-group label {
+                color: #ccc;
+            }
+            
+            .form-group input {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                border: 2px solid #e0e0e0;
+                border-radius: 12px;
+                font-family: 'Lexend Deca', sans-serif;
+                font-size: 1rem;
+                transition: border-color 0.2s;
+                background: #f8f8f8;
+                color: #1a1a2e;
+                outline: none;
+                box-sizing: border-box;
+            }
+            
+            .form-group input:focus {
+                border-color: #6c5ce7;
+                background: #fff;
+            }
+            
+            header.dark .form-group input {
+                background: #2d2d3f;
+                border-color: #3d3d5f;
+                color: #fff;
+            }
+            
+            header.dark .form-group input:focus {
+                border-color: #8c7cf0;
+                background: #3d3d5f;
+            }
+            
+            .form-group input::placeholder {
+                color: #aaa;
+            }
+            
+            header.dark .form-group input::placeholder {
+                color: #666;
+            }
+            
+            .modal-btn {
+                width: 100%;
+                padding: 0.9rem;
+                border: none;
+                border-radius: 12px;
+                font-family: 'Lexend Deca', sans-serif;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                margin-top: 0.5rem;
+                background: #6c5ce7;
+                color: #fff;
+            }
+            
+            .modal-btn:hover {
+                background: #5a4bd1;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+            }
+            
+            .modal-btn:active {
+                transform: translateY(0);
+            }
+            
+            header.dark .modal-btn {
+                background: #8c7cf0;
+                color: #1a1a2e;
+            }
+            
+            header.dark .modal-btn:hover {
+                background: #a394f5;
+            }
+            
+            .modal-footer {
+                text-align: center;
+                margin-top: 1.5rem;
+                font-family: 'Lexend Deca', sans-serif;
+                font-size: 0.85rem;
+                color: #888;
+            }
+            
+            header.dark .modal-footer {
+                color: #aaa;
+            }
+            
+            .modal-footer a {
+                color: #6c5ce7;
+                text-decoration: none;
+                font-weight: 700;
+                cursor: pointer;
+            }
+            
+            .modal-footer a:hover {
+                text-decoration: underline;
+            }
+            
+            header.dark .modal-footer a {
+                color: #8c7cf0;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+        </style>
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
             <div class="logo">
-                <h2>Larp List
-            </h2>
+                <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">
@@ -61,20 +360,124 @@
                             alt=""
                         />
                     </button>
-                    <!-- Replace the '#' with your discord server's invite-->
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
                     <a
                         class="nav__cta type-label-lg"
                         href="https://forms.gle/irLaSCGuXMbEwD28A"
                         target="_blank"
                         >Submit Record</a
                     >
+                    <div class="nav__auth">
+                        <button class="btn-auth btn-login" @click="showLoginModal = true">Login</button>
+                        <button class="btn-auth btn-signup" @click="handleSignUp">Register</button>
+                    </div>
                 </div>
             </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
+
+        <!-- Login Modal -->
+        <div class="modal-overlay" :class="{ active: showLoginModal }" @click.self="showLoginModal = false">
+            <div class="modal">
+                <button class="modal-close" @click="showLoginModal = false">✕</button>
+                <h2 class="modal-title">Welcome Back</h2>
+                <p class="modal-subtitle">Login to your account</p>
+                
+                <form @submit.prevent="handleLoginSubmit">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input 
+                            id="loginUsername"
+                            type="text" 
+                            v-model="loginUsername" 
+                            placeholder="Enter your username"
+                            required
+                            autofocus
+                        />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input 
+                            id="loginPassword"
+                            type="password" 
+                            v-model="loginPassword" 
+                            placeholder="Enter your password"
+                            required
+                        />
+                    </div>
+                    
+                    <button type="submit" class="modal-btn">Login</button>
+                </form>
+                
+                <div class="modal-footer">
+                    Don't have an account? <a @click="switchToRegister">Register here</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            (function() {
+                Vue.mixin({
+                    data() {
+                        return {
+                            authUsers: JSON.parse(localStorage.getItem('larpUsers')) || [],
+                            currentUser: null,
+                            showLoginModal: false,
+                            loginUsername: '',
+                            loginPassword: ''
+                        }
+                    },
+                    methods: {
+                        handleSignUp() {
+                            this.showLoginModal = false;
+                            const username = prompt('Create a username (at least 3 characters):');
+                            if (!username || username.trim().length < 3) {
+                                alert('Username must be at least 3 characters.');
+                                return;
+                            }
+                            const password = prompt('Create a password (at least 4 characters):');
+                            if (!password || password.trim().length < 4) {
+                                alert('Password must be at least 4 characters.');
+                                return;
+                            }
+                            const existing = this.authUsers.find(u => u.username === username.trim());
+                            if (existing) {
+                                alert('Username already taken. Please choose another.');
+                                return;
+                            }
+                            const newUser = { username: username.trim(), password: password.trim() };
+                            this.authUsers.push(newUser);
+                            localStorage.setItem('larpUsers', JSON.stringify(this.authUsers));
+                            this.currentUser = newUser;
+                            alert(`Account created successfully! Welcome, ${newUser.username}!`);
+                        },
+                        handleLoginSubmit() {
+                            const found = this.authUsers.find(
+                                u => u.username === this.loginUsername.trim() && 
+                                u.password === this.loginPassword.trim()
+                            );
+                            if (found) {
+                                this.currentUser = found;
+                                this.showLoginModal = false;
+                                this.loginUsername = '';
+                                this.loginPassword = '';
+                                alert(`Welcome back, ${found.username}! You are now logged in.`);
+                            } else {
+                                alert('Invalid username or password. Please try again or register.');
+                            }
+                        },
+                        switchToRegister() {
+                            this.showLoginModal = false;
+                            setTimeout(() => {
+                                this.handleSignUp();
+                            }, 300);
+                        }
+                    }
+                });
+            })();
+        </script>
     </body>
 </html>
