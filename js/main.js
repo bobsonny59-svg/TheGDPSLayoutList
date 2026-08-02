@@ -2,41 +2,10 @@ import routes from './routes.js';
 
 export const store = Vue.reactive({
     dark: JSON.parse(localStorage.getItem('dark')) || false,
-    user: JSON.parse(localStorage.getItem('user')) || null, 
-    
     toggleDark() {
         this.dark = !this.dark;
         localStorage.setItem('dark', JSON.stringify(this.dark));
     },
-
-    login(username, password) {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const foundUser = users.find(u => u.username === username && u.password === password);
-        if (foundUser) {
-            this.user = foundUser;
-            localStorage.setItem('user', JSON.stringify(foundUser));
-            return true;
-        }
-        return false;
-    },
-
-    register(username, password) {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        if (users.find(u => u.username === username)) return false;
-
-        const newUser = { username, password, points: 0, levelsBeaten: [] };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
-        this.user = newUser;
-        localStorage.setItem('user', JSON.stringify(newUser));
-        return true;
-    },
-
-    logout() {
-        this.user = null;
-        localStorage.removeItem('user');
-    }
 });
 
 // --- LOGIN COMPONENT ---
@@ -48,12 +17,8 @@ const Login = {
                 this.error = "Please fill in all fields.";
                 return;
             }
-            if (store.login(this.username, this.password)) {
-                this.error = '';
-                this.$router.push('/');
-            } else {
-                this.error = "Invalid username or password.";
-            }
+            // Just a demo login for now
+            this.error = "Login functionality is currently disabled.";
         }
     },
     template: `
@@ -79,13 +44,8 @@ const Register = {
                 this.error = "Please fill in all fields.";
                 return;
             }
-            if (store.register(this.username, this.password)) {
-                this.error = '';
-                this.success = "Account created! Logging you in...";
-                setTimeout(() => this.$router.push('/'), 1000);
-            } else {
-                this.error = "Username already taken.";
-            }
+            // Just a demo register for now
+            this.error = "Registration functionality is currently disabled.";
         }
     },
     template: `
