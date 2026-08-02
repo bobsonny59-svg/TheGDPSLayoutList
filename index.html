@@ -33,7 +33,8 @@
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         
-        <!-- REMOVED: <script type="module" src="/js/main.js"></script> to prevent white screen conflicts -->
+        <!-- RESTORED: This loads your real List, Leaderboard, and Roulette pages -->
+        <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
@@ -84,7 +85,7 @@
         <router-view :class="{ dark: store.dark }"></router-view>
 
         <!-- ===================================================== -->
-        <!-- SELF-CONTAINED VUE APP WITH LOGIN/REGISTER PAGES ADDED -->
+        <!-- THIS PART ADDS THE LOGIN/REGISTER PAGES               -->
         <!-- ===================================================== -->
         <script>
             const { createApp, reactive } = Vue;
@@ -96,10 +97,10 @@
                 toggleDark() { this.dark = !this.dark; }
             });
 
-            // 2. Placeholder pages for your existing routes
-            const Home = { template: `<div style="padding: 40px; text-align: center; font-size: 24px;">List Page</div>` };
-            const Leaderboard = { template: `<div style="padding: 40px; text-align: center;">Leaderboard Page</div>` };
-            const Roulette = { template: `<div style="padding: 40px; text-align: center;">Roulette Page</div>` };
+            // 2. Placeholder pages for your existing routes (these are just fallbacks)
+            const Home = { template: `<router-view></router-view>` };
+            const Leaderboard = { template: `<router-view></router-view>` };
+            const Roulette = { template: `<router-view></router-view>` };
 
             // 3. LOGIN PAGE (Matches your screenshot perfectly)
             const Login = {
