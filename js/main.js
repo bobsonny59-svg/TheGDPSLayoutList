@@ -1,6 +1,5 @@
 import routes from './routes.js';
 
-// --- STORE ---
 export const store = Vue.reactive({
     dark: JSON.parse(localStorage.getItem('dark')) || false,
     user: JSON.parse(localStorage.getItem('user')) || null, 
@@ -31,27 +30,6 @@ export const store = Vue.reactive({
         
         this.user = newUser;
         localStorage.setItem('user', JSON.stringify(newUser));
-        return true;
-    },
-
-    addPoints(pointsToAdd, levelId) {
-        if (!this.user) return false;
-        if (this.user.levelsBeaten.includes(levelId)) {
-            alert("You've already beaten this level!");
-            return false;
-        }
-
-        this.user.points += pointsToAdd;
-        this.user.levelsBeaten.push(levelId);
-
-        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.username === this.user.username);
-        if (userIndex !== -1) {
-            allUsers[userIndex] = this.user;
-            localStorage.setItem('users', JSON.stringify(allUsers));
-        }
-
-        localStorage.setItem('user', JSON.stringify(this.user));
         return true;
     },
 
