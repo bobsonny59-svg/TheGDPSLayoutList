@@ -51,13 +51,25 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 <div class="nav__actions">
-                    <!-- Login and Register buttons -->
-                    <router-link class="nav__cta type-label-lg" to="/login">
-                        Login
-                    </router-link>
-                    <router-link class="nav__cta type-label-lg" to="/register">
-                        Register
-                    </router-link>
+                    <!-- SHOW LOGIN/REGISTER WHEN LOGGED OUT -->
+                    <template v-if="!store.user">
+                        <router-link class="nav__cta type-label-lg" to="/login">
+                            Login
+                        </router-link>
+                        <router-link class="nav__cta type-label-lg" to="/register">
+                            Register
+                        </router-link>
+                    </template>
+                    
+                    <!-- SHOW LOGOUT WHEN LOGGED IN -->
+                    <template v-else>
+                        <span class="type-label-lg" style="color: white; margin-right: 10px; opacity: 0.9;">
+                            {{ store.user.username }}
+                        </span>
+                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">
+                            Logout
+                        </a>
+                    </template>
                     
                     <button
                         class="nav__icon"
