@@ -1,36 +1,36 @@
 [
     {
-        "role": "owner",
         "name": "larpuk",
         "link": "https://www.youtube.com/@larpuk55"
-    }
+    },
     {
         "role": "admin",
         "name": "donovianmolesby",
         "link": "https://www.youtube.com/@larpuk55"
-    }
+    },
     {
         "role": "admin",
         "name": "spaceSR",
-        "link": "https://www.tiktok.com/@lenkka37?_r=1&_t=ZS-98YVDv8sO13"
-    }
+        "link": "https://www.tiktok.com/@lenkka37?_r=1&_t=ZS-9YVDv8s013"
+    },
+    {
         "role": "admin",
-        "name": "soullish",
+        "name": "soullish_",
         "link": "https://www.youtube.com/@soullish_e/featured"
-    }
+    },
     {
         "role": "helper",
         "name": "List Helper",
         "link": "https://www.youtube.com/@Prometheus_Alt"
-    }
+    },
     {
         "role": "trial",
         "name": "Trial List Helper",
         "link": "https://www.youtube.com/@Prometheus_Alt"
-    }
+    },
     {
         "role": "dev",
-        "name": "Larpuk",
+        "name": "larpuk",
         "link": "https://www.youtube.com/@larpuk55"
     }
 ]
