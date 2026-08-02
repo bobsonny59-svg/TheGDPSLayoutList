@@ -9,9 +9,7 @@ export default {
     },
     methods: {
         updateLeaderboard() {
-            // Grab the saved users from local storage
             this.allUsers = JSON.parse(localStorage.getItem('users')) || [];
-            // Sort them by points (highest to lowest)
             this.allUsers.sort((a, b) => b.points - a.points);
         }
     },
@@ -34,7 +32,7 @@ export default {
                 </div>
 
                 <div v-if="allUsers.length === 0" style="padding: 40px; color: #999;">
-                    No players registered yet. Go beat a level to appear here!
+                    No players registered yet.
                 </div>
             </div>
         </div>
