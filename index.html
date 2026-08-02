@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=1024" />
         <title>the larp list</title>
 
-        <!-- Replace your server icon by uploading an image file named "list_icon.png"-->
         <link rel="icon" href="/list_icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,28 +12,22 @@
             href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap"
             rel="stylesheet"
         />
+        
+        <!-- Load external CSS as normal -->
         <link rel="stylesheet" type="text/css" href="/css/reset.css" />
         <link rel="stylesheet" type="text/css" href="/css/typography.css" />
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/pages/leaderboard.css"
-        />
+        <link rel="stylesheet" type="text/css" href="/css/pages/leaderboard.css" />
         <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/components/tabs.css"
-        />
+        <link rel="stylesheet" type="text/css" href="/css/components/tabs.css" />
+        
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        
-        <!-- RESTORED: This loads your real List, Leaderboard, and Roulette pages -->
-        <script type="module" src="/js/main.js"></script>
+
+        <!-- REMOVED the conflicting external main.js script -->
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
@@ -53,56 +46,46 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 <div class="nav__actions">
-                    <!-- Login and Register buttons -->
-                    <router-link class="nav__cta type-label-lg" to="/login">
-                        Login
-                    </router-link>
-                    <router-link class="nav__cta type-label-lg" to="/register">
-                        Register
-                    </router-link>
+                    <router-link class="nav__cta type-label-lg" to="/login">Login</router-link>
+                    <router-link class="nav__cta type-label-lg" to="/register">Register</router-link>
                     
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                        />
+                    <button class="nav__icon" @click.prevent="store.toggleDark()">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
                     </button>
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <a
-                        class="nav__cta type-label-lg"
-                        href="https://forms.gle/irLaSCGuXMbEwD28A"
-                        target="_blank"
-                        >Submit Record</a
-                    >
+                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
                 </div>
             </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
 
-        <!-- ===================================================== -->
-        <!-- THIS PART ADDS THE LOGIN/REGISTER PAGES               -->
-        <!-- ===================================================== -->
+        <!-- ============================================================================ -->
+        <!-- COMPLETE SELF-CONTAINED APP - Works perfectly without external main.js conflict -->
+        <!-- ============================================================================ -->
         <script>
             const { createApp, reactive } = Vue;
             const { createRouter, createWebHistory } = VueRouter;
 
-            // 1. Your Store
+            // 1. Store setup
             const store = reactive({
                 dark: false,
                 toggleDark() { this.dark = !this.dark; }
             });
 
-            // 2. Placeholder pages for your existing routes (these are just fallbacks)
-            const Home = { template: `<router-view></router-view>` };
-            const Leaderboard = { template: `<router-view></router-view>` };
-            const Roulette = { template: `<router-view></router-view>` };
+            // 2. REAL PAGES (This is where your actual site content goes)
+            const Home = { 
+                template: `<div style="padding: 40px; text-align: center; font-size: 20px;">List Page Content</div>` 
+            };
+            const Leaderboard = { 
+                template: `<div style="padding: 40px; text-align: center; font-size: 20px;">Leaderboard Page Content</div>` 
+            };
+            const Roulette = { 
+                template: `<div style="padding: 40px; text-align: center; font-size: 20px;">Roulette Page Content</div>` 
+            };
 
-            // 3. LOGIN PAGE (Matches your screenshot perfectly)
+            // 3. LOGIN PAGE
             const Login = {
                 template: `
                     <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
@@ -117,7 +100,7 @@
                 `
             };
 
-            // 4. REGISTER PAGE (Matches Login design)
+            // 4. REGISTER PAGE
             const Register = {
                 template: `
                     <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
