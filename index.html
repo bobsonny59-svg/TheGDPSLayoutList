@@ -52,7 +52,29 @@
                 </router-link>
                 
                 <div class="nav__actions" style="display: flex; align-items: center; gap: 12px;">
-                    <!-- Login and Register buttons (fixed alignment) -->
+                    
+                    <!-- Dark Mode Toggle Button (MOVED TO FRONT) -->
+                    <button
+                        class="nav__icon"
+                        @click.prevent="store.toggleDark()"
+                        style="display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; padding: 4px;"
+                    >
+                        <img
+                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
+                            alt=""
+                            style="width: 24px; height: 24px; display: block;"
+                        />
+                    </button>
+
+                    <!-- Discord Icon (MOVED TO FRONT) -->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; justify-content: center; padding: 4px; text-decoration: none;">
+                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
+                    </a>
+
+                    <!-- Separator line for visual neatness -->
+                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.3);"></div>
+
+                    <!-- Login and Register buttons -->
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <router-link to="/login" style="
                             display: inline-flex;
@@ -91,50 +113,31 @@
                         " onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'">
                             Register
                         </router-link>
+
+                        <!-- Submit Record button -->
+                        <a
+                            href="https://forms.gle/irLaSCGuXMbEwD28A"
+                            target="_blank"
+                            style="
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: 8px 20px;
+                                background: white;
+                                color: #2b6ef0;
+                                border-radius: 50px;
+                                text-decoration: none;
+                                font-weight: 700;
+                                font-size: 14px;
+                                font-family: 'Lexend Deca', sans-serif;
+                                height: 38px;
+                                box-sizing: border-box;
+                                transition: background 0.2s;
+                            "
+                            onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'"
+                            >Submit Record</a
+                        >
                     </div>
-
-                    <!-- Separator line for visual neatness -->
-                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.3);"></div>
-
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                        style="display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; padding: 4px;"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                            style="width: 24px; height: 24px; display: block;"
-                        />
-                    </button>
-
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; justify-content: center; padding: 4px; text-decoration: none;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
-                    </a>
-
-                    <!-- Submit Record button (fixed alignment) -->
-                    <a
-                        href="https://forms.gle/irLaSCGuXMbEwD28A"
-                        target="_blank"
-                        style="
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            padding: 8px 20px;
-                            background: white;
-                            color: #2b6ef0;
-                            border-radius: 50px;
-                            text-decoration: none;
-                            font-weight: 700;
-                            font-size: 14px;
-                            font-family: 'Lexend Deca', sans-serif;
-                            height: 38px;
-                            box-sizing: border-box;
-                            transition: background 0.2s;
-                        "
-                        onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'"
-                        >Submit Record</a
-                    >
                 </div>
             </nav>
         </header>
