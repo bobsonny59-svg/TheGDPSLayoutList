@@ -1,6 +1,6 @@
 import routes from './routes.js';
 
-// --- STORE (Global App State) ---
+// --- STORE ---
 export const store = Vue.reactive({
     dark: JSON.parse(localStorage.getItem('dark')) || false,
     user: JSON.parse(localStorage.getItem('user')) || null, 
@@ -10,7 +10,6 @@ export const store = Vue.reactive({
         localStorage.setItem('dark', JSON.stringify(this.dark));
     },
 
-    // LOGIN
     login(username, password) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const foundUser = users.find(u => u.username === username && u.password === password);
@@ -22,7 +21,6 @@ export const store = Vue.reactive({
         return false;
     },
 
-    // REGISTER
     register(username, password) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         if (users.find(u => u.username === username)) return false;
@@ -36,21 +34,16 @@ export const store = Vue.reactive({
         return true;
     },
 
-    // ADD POINTS (Call this from your List.js)
     addPoints(pointsToAdd, levelId) {
         if (!this.user) return false;
-
-        // Prevent beating the same level twice
         if (this.user.levelsBeaten.includes(levelId)) {
             alert("You've already beaten this level!");
             return false;
         }
 
-        // Update the user's data
         this.user.points += pointsToAdd;
         this.user.levelsBeaten.push(levelId);
 
-        // Save to the global users list
         let allUsers = JSON.parse(localStorage.getItem('users')) || [];
         const userIndex = allUsers.findIndex(u => u.username === this.user.username);
         if (userIndex !== -1) {
@@ -58,7 +51,6 @@ export const store = Vue.reactive({
             localStorage.setItem('users', JSON.stringify(allUsers));
         }
 
-        // Update the local logged-in session
         localStorage.setItem('user', JSON.stringify(this.user));
         return true;
     },
@@ -141,9 +133,9 @@ const app = Vue.createApp({
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
     routes: [
+        ...routes,
         { path: '/login', component: Login },
-        { path: '/register', component: Register },
-        ...routes // This pulls in your List, Leaderboard, Roulette pages!
+        { path: '/register', component: Register }
     ],
 });
 
