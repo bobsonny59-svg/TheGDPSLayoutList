@@ -5,144 +5,234 @@
         <meta name="viewport" content="width=1024" />
         <title>the larp list</title>
 
-        <!-- Replace your server icon by uploading an image file named "list_icon.png"-->
         <link rel="icon" href="/list_icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
-        <link rel="stylesheet" type="text/css" href="/css/typography.css" />
-        <link rel="stylesheet" type="text/css" href="/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/pages/leaderboard.css"
-        />
-        <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/css/components/tabs.css"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;700&display=swap" rel="stylesheet" />
+        
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
+
+        <style>
+            /* --- BASE RESET --- */
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Lexend Deca', sans-serif; background: #f0f2f5; }
+
+            /* --- HEADER --- */
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 20px;
+                background: #2b6ef0; /* Matches screenshot blue */
+                color: white;
+                height: 60px;
+            }
+            
+            /* --- LOGO --- */
+            .logo { display: flex; align-items: center; gap: 10px; }
+            .logo h2 { font-size: 24px; font-weight: 700; letter-spacing: 0.5px; margin: 0; }
+            .logo p { font-size: 12px; font-weight: 500; opacity: 0.8; margin-top: 4px; }
+
+            /* --- NAV --- */
+            .nav { display: flex; align-items: center; gap: 20px; }
+            .nav__tab { color: white; text-decoration: none; font-size: 15px; font-weight: 500; opacity: 0.9; }
+            .nav__tab:hover { opacity: 1; }
+            
+            .nav__actions { display: flex; align-items: center; gap: 12px; }
+            .nav__icon { display: flex; align-items: center; background: transparent; border: none; cursor: pointer; }
+            .nav__icon img { width: 22px; height: 22px; }
+
+            /* --- HEADER BUTTONS --- */
+            .header-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 6px 16px;
+                background: white;
+                color: #2b6ef0;
+                border-radius: 50px;
+                text-decoration: none;
+                font-weight: 700;
+                font-size: 13px;
+                height: 32px;
+                transition: background 0.2s;
+            }
+            .header-btn:hover { background: #e6eefc; }
+
+            /* --- LOGIN / REGISTER CARD STYLES --- */
+            .auth-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: calc(100vh - 60px); /* Full height minus header */
+                padding: 20px;
+            }
+
+            .auth-card {
+                background: white;
+                width: 100%;
+                max-width: 400px;
+                padding: 40px;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                text-align: center;
+            }
+
+            .auth-card h1 {
+                font-size: 28px;
+                font-weight: 700;
+                margin-bottom: 30px;
+                color: #1a1a1a;
+            }
+
+            .auth-input {
+                width: 100%;
+                padding: 14px 16px;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 15px;
+                font-family: 'Lexend Deca', sans-serif;
+                margin-bottom: 16px;
+                outline: none;
+                transition: border-color 0.2s;
+                background: #fafafa;
+            }
+            .auth-input:focus {
+                border-color: #2b6ef0;
+                background: white;
+            }
+
+            .auth-submit-btn {
+                width: 100%;
+                padding: 14px;
+                background: #2b6ef0;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: 700;
+                font-family: 'Lexend Deca', sans-serif;
+                cursor: pointer;
+                margin-top: 10px;
+                transition: background 0.2s;
+            }
+            .auth-submit-btn:hover { background: #1f5ac9; }
+
+            .auth-link {
+                display: block;
+                margin-top: 20px;
+                font-size: 14px;
+                color: #666;
+                text-decoration: none;
+            }
+            .auth-link span { color: #2b6ef0; font-weight: 600; }
+            .auth-link:hover span { text-decoration: underline; }
+        </style>
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
-            <!-- FIXED LOGO: Now 1 line -->
-            <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">Larp List</h2>
-                <p style="margin: 0; font-size: 14px; font-weight: 500; opacity: 0.8; padding-top: 2px;">v1.0.0</p>
+            <div class="logo">
+                <h2>TSL</h2>
+                <p>v2.3.0</p>
             </div>
             
             <nav class="nav">
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
-                
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 12px;">
-                    
-                    <!-- Dark Mode Toggle Button -->
-                    <button
-                        class="nav__icon"
-                        @click.prevent="store.toggleDark()"
-                        style="display: flex; align-items: center; justify-content: center; background: transparent; border: none; cursor: pointer; padding: 4px;"
-                    >
-                        <img
-                            :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'"
-                            alt=""
-                            style="width: 24px; height: 24px; display: block;"
-                        />
+                <router-link class="nav__tab" to="/">List</router-link>
+                <router-link class="nav__tab" to="/leaderboard">Leaderboard</router-link>
+                <router-link class="nav__tab" to="/roulette">Roulette</router-link>
+                <router-link class="nav__tab" to="/packs">Packs</router-link>
+
+                <div class="nav__actions">
+                    <button class="nav__icon" @click.prevent="store.toggleDark()">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
                     </button>
-
-                    <!-- Discord Icon -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; justify-content: center; padding: 4px; text-decoration: none;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
+                        <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-
-                    <!-- Separator line -->
-                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.3);"></div>
-
-                    <!-- Login and Register buttons (FIXED: changed router-link to standard <a> tags) -->
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <a href="/login" style="
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            padding: 8px 18px;
-                            background: white;
-                            color: #2b6ef0;
-                            border-radius: 50px;
-                            text-decoration: none;
-                            font-weight: 700;
-                            font-size: 14px;
-                            font-family: 'Lexend Deca', sans-serif;
-                            height: 38px;
-                            box-sizing: border-box;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'">
-                            Login
-                        </a>
-                        
-                        <a href="/register" style="
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            padding: 8px 18px;
-                            background: white;
-                            color: #2b6ef0;
-                            border-radius: 50px;
-                            text-decoration: none;
-                            font-weight: 700;
-                            font-size: 14px;
-                            font-family: 'Lexend Deca', sans-serif;
-                            height: 38px;
-                            box-sizing: border-box;
-                            transition: background 0.2s;
-                        " onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'">
-                            Register
-                        </a>
-
-                        <!-- Submit Record button -->
-                        <a
-                            href="https://forms.gle/irLaSCGuXMbEwD28A"
-                            target="_blank"
-                            style="
-                                display: inline-flex;
-                                align-items: center;
-                                justify-content: center;
-                                padding: 8px 20px;
-                                background: white;
-                                color: #2b6ef0;
-                                border-radius: 50px;
-                                text-decoration: none;
-                                font-weight: 700;
-                                font-size: 14px;
-                                font-family: 'Lexend Deca', sans-serif;
-                                height: 38px;
-                                box-sizing: border-box;
-                                transition: background 0.2s;
-                            "
-                            onmouseover="this.style.background='#e6eefc'" onmouseout="this.style.background='white'"
-                            >Submit Record</a
-                        >
-                    </div>
+                    
+                    <!-- Route Links for Header -->
+                    <router-link class="header-btn" to="/login">Login</router-link>
+                    <router-link class="header-btn" to="/register">Register</router-link>
+                    <a class="header-btn" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
                 </div>
             </nav>
         </header>
+
+        <!-- ROUTER VIEW LOADS PAGES HERE -->
         <router-view :class="{ dark: store.dark }"></router-view>
+
+        <script>
+            const { createApp, ref, reactive, computed } = Vue;
+            const { createRouter, createWebHistory } = VueRouter;
+
+            // 1. MOCK STORE (to replicate your existing logic)
+            const store = reactive({
+                dark: false,
+                toggleDark() { this.dark = !this.dark; }
+            });
+
+            // 2. PAGE COMPONENTS
+            const Home = { template: `<div style="padding: 40px; text-align: center; font-size: 24px;">Welcome to the Larp List</div>` };
+            const Leaderboard = { template: `<div style="padding: 40px; text-align: center;">Leaderboard Page</div>` };
+            const Roulette = { template: `<div style="padding: 40px; text-align: center;">Roulette Page</div>` };
+            const Packs = { template: `<div style="padding: 40px; text-align: center;">Packs Page</div>` };
+
+            // 3. LOGIN COMPONENT (Matches your screenshot)
+            const Login = {
+                template: `
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <h1>Login</h1>
+                            <input type="text" placeholder="Username" class="auth-input">
+                            <input type="password" placeholder="Password" class="auth-input">
+                            <button class="auth-submit-btn" @click="alert('Login clicked!')">Login</button>
+                            <a href="#/register" class="auth-link">Don't have an account? <span>Register</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 4. REGISTER COMPONENT (Similar design)
+            const Register = {
+                template: `
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <h1>Register</h1>
+                            <input type="text" placeholder="Username" class="auth-input">
+                            <input type="email" placeholder="Email" class="auth-input">
+                            <input type="password" placeholder="Password" class="auth-input">
+                            <button class="auth-submit-btn" @click="alert('Register clicked!')">Register</button>
+                            <a href="#/login" class="auth-link">Already have an account? <span>Login</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 5. ROUTER SETUP
+            const routes = [
+                { path: '/', component: Home },
+                { path: '/leaderboard', component: Leaderboard },
+                { path: '/roulette', component: Roulette },
+                { path: '/packs', component: Packs },
+                { path: '/login', component: Login },
+                { path: '/register', component: Register }
+            ];
+
+            const router = createRouter({
+                history: createWebHistory(),
+                routes
+            });
+
+            // 6. CREATE APP
+            const app = createApp({
+                setup() {
+                    return { store };
+                }
+            });
+
+            app.use(router);
+            app.mount('#app');
+        </script>
     </body>
 </html>
