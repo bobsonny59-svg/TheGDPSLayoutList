@@ -4,13 +4,11 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=1024" />
         <title>the larp list</title>
-        
+
         <link rel="icon" href="/list_icon.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap" rel="stylesheet" />
-        
-        <!-- Your external CSS -->
         <link rel="stylesheet" type="text/css" href="/css/reset.css" />
         <link rel="stylesheet" type="text/css" href="/css/typography.css" />
         <link rel="stylesheet" type="text/css" href="/css/main.css" />
@@ -21,52 +19,59 @@
         <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
         <link rel="stylesheet" type="text/css" href="/css/components/tabs.css" />
         
-        <!-- Vue Libraries -->
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        
-        <!-- THIS MUST BE HERE - It loads the app -->
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <!-- Header with dynamic Login/Register/Logout -->
-        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #2b6ef0; color: white;">
-            <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-                <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: white;">Larp List</h2>
-                <p style="margin: 0; font-size: 12px; opacity: 0.8; color: white;">v1.0.0</p>
+        <header :class="{ dark: store.dark }">
+            <div class="logo">
+                <h2>Larp List</h2>
+                <p>v1.0.0</p>
             </div>
-            
-            <nav class="nav" style="display: flex; align-items: center; gap: 20px;">
-                <router-link class="nav__tab" to="/" style="color: white; text-decoration: none; font-weight: 500;">List</router-link>
-                <router-link class="nav__tab" to="/leaderboard" style="color: white; text-decoration: none; font-weight: 500;">Leaderboard</router-link>
-                <router-link class="nav__tab" to="/roulette" style="color: white; text-decoration: none; font-weight: 500;">Roulette</router-link>
-                
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 10px;">
+            <nav class="nav">
+                <router-link class="nav__tab" to="/">
+                    <span class="type-label-lg">List</span>
+                </router-link>
+                <router-link class="nav__tab" to="/leaderboard">
+                    <span class="type-label-lg">Leaderboard</span>
+                </router-link>
+                <router-link class="nav__tab" to="/roulette">
+                    <span class="type-label-lg">Roulette</span>
+                </router-link>
+                <div class="nav__actions">
                     
-                    <!-- SHOW LOGIN/REGISTER IF NOT LOGGED IN -->
+                    <!-- Login and Register buttons (Hide when logged in) -->
                     <template v-if="!store.user">
-                        <router-link to="/login" style="padding: 6px 16px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px;">Login</router-link>
-                        <router-link to="/register" style="padding: 6px 16px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px;">Register</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/login">
+                            Login
+                        </router-link>
+                        <router-link class="nav__cta type-label-lg" to="/register">
+                            Register
+                        </router-link>
                     </template>
                     
-                    <!-- SHOW LOGOUT IF LOGGED IN -->
+                    <!-- Show Logout when logged in (Uses your nav styling) -->
                     <template v-else>
-                        <span style="font-weight: 500; font-size: 14px; color: white; opacity: 0.9;">{{ store.user.username }} ({{ store.user.points }} pts)</span>
-                        <a @click.prevent="store.logout()" href="#" style="padding: 6px 16px; background: rgba(255,255,255,0.2); border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px; color: white;">Logout</a>
+                        <span class="type-label-lg" style="color: white; margin-right: 10px; opacity: 0.9;">
+                            {{ store.user.username }} ({{ store.user.points }} pts)
+                        </span>
+                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">
+                            Logout
+                        </a>
                     </template>
-
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: none; border: none; cursor: pointer;">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 20px; height: 20px;" />
+                    
+                    <button class="nav__icon" @click.prevent="store.toggleDark()">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
                     </button>
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 20px; height: 20px;" />
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
+                        <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <a href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="padding: 6px 16px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px;">Submit Record</a>
+                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
                 </div>
             </nav>
         </header>
-
-        <!-- THIS IS WHERE THE PAGES SHOW UP -->
+        
         <router-view :class="{ dark: store.dark }"></router-view>
     </body>
 </html>
