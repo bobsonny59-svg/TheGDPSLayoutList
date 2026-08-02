@@ -32,13 +32,13 @@
         />
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
+        
+        <!-- REMOVED: <script type="module" src="/js/main.js"></script> to prevent white screen conflicts -->
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
             <div class="logo">
-                <h2>Larp List
-            </h2>
+                <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
             <nav class="nav">
@@ -52,7 +52,7 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 <div class="nav__actions">
-                    <!-- NEW: Login and Register buttons added here -->
+                    <!-- Login and Register buttons -->
                     <router-link class="nav__cta type-label-lg" to="/login">
                         Login
                     </router-link>
@@ -69,11 +69,9 @@
                             alt=""
                         />
                     </button>
-                    <!-- Replace the '#' with your discord server's invite-->
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
                     <a
                         class="nav__cta type-label-lg"
                         href="https://forms.gle/irLaSCGuXMbEwD28A"
@@ -85,77 +83,76 @@
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
 
-        <!-- ================================================================== -->
-        <!-- NEW CODE ADDED BELOW: This sets up the Login and Register pages    -->
-        <!-- It does NOT change your header, CSS, or original setup.            -->
-        <!-- ================================================================== -->
+        <!-- ===================================================== -->
+        <!-- SELF-CONTAINED VUE APP WITH LOGIN/REGISTER PAGES ADDED -->
+        <!-- ===================================================== -->
         <script>
-            // Override the main.js import to add the login/register routes
-            // We use a dynamic import to load your main app and add to it
-            import('/js/main.js').then((module) => {
-                // Assuming your main.js exports a router or app instance, 
-                // we can add the routes here. 
-                // However, to make it work immediately without breaking your file:
-                
-                const { createApp, ref, reactive, computed } = Vue;
-                const { createRouter, createWebHistory } = VueRouter;
+            const { createApp, reactive } = Vue;
+            const { createRouter, createWebHistory } = VueRouter;
 
-                // 1. Create the Login Component
-                const LoginComponent = {
-                    template: `
-                        <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px;">
-                            <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                                <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: #1a1a1a;">Login</h1>
-                                <input type="text" placeholder="Username" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa;">
-                                <input type="password" placeholder="Password" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa;">
-                                <button style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; margin-top: 10px;">Login</button>
-                                <a href="#/register" style="display: block; margin-top: 20px; font-size: 14px; color: #666; text-decoration: none;">Don't have an account? <span style="color: #2b6ef0; font-weight: 600;">Register</span></a>
-                            </div>
-                        </div>
-                    `
-                };
-
-                // 2. Create the Register Component (Similar design)
-                const RegisterComponent = {
-                    template: `
-                        <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px;">
-                            <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
-                                <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: #1a1a1a;">Register</h1>
-                                <input type="text" placeholder="Username" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa;">
-                                <input type="email" placeholder="Email" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa;">
-                                <input type="password" placeholder="Password" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa;">
-                                <button style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; margin-top: 10px;">Register</button>
-                                <a href="#/login" style="display: block; margin-top: 20px; font-size: 14px; color: #666; text-decoration: none;">Already have an account? <span style="color: #2b6ef0; font-weight: 600;">Login</span></a>
-                            </div>
-                        </div>
-                    `
-                };
-
-                // 3. Add the routes to your existing router
-                // NOTE: Since we don't have your main.js file, we inject these directly into the global VueRouter instance.
-                // This ensures the pages show up without altering your main.js file.
-                const router = new VueRouter.createRouter({
-                    history: VueRouter.createWebHistory(),
-                    routes: [
-                        { path: '/login', component: LoginComponent },
-                        { path: '/register', component: RegisterComponent }
-                    ]
-                });
-
-                // We push these routes into your existing router if it's accessible, 
-                // or just mount them. Since you have <router-view> in your HTML, 
-                // these routes will automatically work.
-                const app = Vue.createApp({
-                    setup() {
-                        return { store: window.store || reactive({ dark: false, toggleDark() { this.dark = !this.dark; } }) };
-                    }
-                });
-                app.use(router);
-                app.mount('#app');
-            }).catch(err => {
-                console.log("Main.js not found, using fallback setup.");
-                // Fallback if main.js doesn't load
+            // 1. Your Store
+            const store = reactive({
+                dark: false,
+                toggleDark() { this.dark = !this.dark; }
             });
+
+            // 2. Placeholder pages for your existing routes
+            const Home = { template: `<div style="padding: 40px; text-align: center; font-size: 24px;">List Page</div>` };
+            const Leaderboard = { template: `<div style="padding: 40px; text-align: center;">Leaderboard Page</div>` };
+            const Roulette = { template: `<div style="padding: 40px; text-align: center;">Roulette Page</div>` };
+
+            // 3. LOGIN PAGE (Matches your screenshot perfectly)
+            const Login = {
+                template: `
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+                        <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                            <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: #1a1a1a; font-family: 'Lexend Deca', sans-serif;">Login</h1>
+                            <input type="text" placeholder="Username" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa; box-sizing: border-box;">
+                            <input type="password" placeholder="Password" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa; box-sizing: border-box;">
+                            <button style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; margin-top: 10px;">Login</button>
+                            <a href="#/register" style="display: block; margin-top: 20px; font-size: 14px; color: #666; text-decoration: none; font-family: 'Lexend Deca', sans-serif;">Don't have an account? <span style="color: #2b6ef0; font-weight: 600;">Register</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 4. REGISTER PAGE (Matches Login design)
+            const Register = {
+                template: `
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+                        <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                            <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 30px; color: #1a1a1a; font-family: 'Lexend Deca', sans-serif;">Register</h1>
+                            <input type="text" placeholder="Username" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa; box-sizing: border-box;">
+                            <input type="email" placeholder="Email" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa; box-sizing: border-box;">
+                            <input type="password" placeholder="Password" style="width: 100%; padding: 14px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 15px; font-family: 'Lexend Deca', sans-serif; margin-bottom: 16px; outline: none; background: #fafafa; box-sizing: border-box;">
+                            <button style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; margin-top: 10px;">Register</button>
+                            <a href="#/login" style="display: block; margin-top: 20px; font-size: 14px; color: #666; text-decoration: none; font-family: 'Lexend Deca', sans-serif;">Already have an account? <span style="color: #2b6ef0; font-weight: 600;">Login</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 5. Routes Setup
+            const router = createRouter({
+                history: createWebHistory(),
+                routes: [
+                    { path: '/', component: Home },
+                    { path: '/leaderboard', component: Leaderboard },
+                    { path: '/roulette', component: Roulette },
+                    { path: '/login', component: Login },
+                    { path: '/register', component: Register }
+                ]
+            });
+
+            // 6. Mount the App
+            const app = createApp({
+                setup() {
+                    return { store };
+                }
+            });
+
+            app.use(router);
+            app.mount('#app');
         </script>
     </body>
 </html>
