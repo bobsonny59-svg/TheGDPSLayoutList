@@ -1,40 +1,110 @@
-export default {
-    data() {
-        return {
-            allUsers: []
-        }
-    },
-    mounted() {
-        this.updateLeaderboard();
-    },
-    methods: {
-        updateLeaderboard() {
-            this.allUsers = JSON.parse(localStorage.getItem('users')) || [];
-            this.allUsers.sort((a, b) => b.points - a.points);
-        }
-    },
-    template: `
-        <div style="padding: 40px; max-width: 600px; margin: 0 auto; text-align: center;">
-            <h1 style="font-family: 'Lexend Deca'; font-size: 32px; margin-bottom: 30px;">Leaderboard</h1>
-            
-            <div style="background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden;">
-                <div style="display: flex; justify-content: space-between; background: #2b6ef0; color: white; padding: 15px 20px; font-weight: bold;">
-                    <span>Player</span>
-                    <span>Points</span>
-                </div>
-                
-                <div v-for="(user, index) in allUsers" :key="user.username" style="display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #f0f0f0;">
-                    <div>
-                        <span style="font-weight: bold; color: #999; margin-right: 10px;">#{{ index + 1 }}</span>
-                        <span style="font-weight: 600;">{{ user.username }}</span>
-                    </div>
-                    <span style="font-weight: bold; color: #2b6ef0;">{{ user.points }}</span>
-                </div>
+import { fetchLeaderboard } from '../content.js';
+import { localize } from '../util.js';
 
-                <div v-if="allUsers.length === 0" style="padding: 40px; color: #999;">
-                    No players registered yet.
+import Spinner from '../components/Spinner.js';
+
+export default {
+    components: {
+        Spinner,
+    },
+    data: () => ({
+        leaderboard: [],
+        loading: true,
+        selected: 0,
+        err: [],
+    }),
+    template: `
+        <main v-if="loading">
+            <Spinner></Spinner>
+        </main>
+        <main v-else class="page-leaderboard-container">
+            <div class="page-leaderboard">
+                <div class="error-container">
+                    <p class="error" v-if="err.length > 0">
+                        Leaderboard may be incorrect, as the following levels could not be loaded: {{ err.join(', ') }}
+                    </p>
+                </div>
+                <div class="board-container">
+                    <table class="board">
+                        <tr v-for="(ientry, i) in leaderboard">
+                            <td class="rank">
+                                <p class="type-label-lg">#{{ i + 1 }}</p>
+                            </td>
+                            <td class="total">
+                                <p class="type-label-lg">{{ localize(ientry.total) }}</p>
+                            </td>
+                            <td class="user" :class="{ 'active': selected == i }">
+                                <button @click="selected = i">
+                                    <span class="type-label-lg">{{ ientry.user }}</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="player-container">
+                    <div class="player">
+                        <h1>#{{ selected + 1 }} {{ entry.user }}</h1>
+                        <h3>{{ entry.total }}</h3>
+                        <h2 v-if="entry.verified.length > 0">Verified ({{ entry.verified.length}})</h2>
+                        <table class="table">
+                            <tr v-for="score in entry.verified">
+                                <td class="rank">
+                                    <p>#{{ score.rank }}</p>
+                                </td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                </td>
+                                <td class="score">
+                                    <p>+{{ localize(score.score) }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        <h2 v-if="entry.completed.length > 0">Completed ({{ entry.completed.length }})</h2>
+                        <table class="table">
+                            <tr v-for="score in entry.completed">
+                                <td class="rank">
+                                    <p>#{{ score.rank }}</p>
+                                </td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.level }}</a>
+                                </td>
+                                <td class="score">
+                                    <p>+{{ localize(score.score) }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        <h2 v-if="entry.progressed.length > 0">Progressed ({{entry.progressed.length}})</h2>
+                        <table class="table">
+                            <tr v-for="score in entry.progressed">
+                                <td class="rank">
+                                    <p>#{{ score.rank }}</p>
+                                </td>
+                                <td class="level">
+                                    <a class="type-label-lg" target="_blank" :href="score.link">{{ score.percent }}% {{ score.level }}</a>
+                                </td>
+                                <td class="score">
+                                    <p>+{{ localize(score.score) }}</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    `
+        </main>
+    `,
+    computed: {
+        entry() {
+            return this.leaderboard[this.selected];
+        },
+    },
+    async mounted() {
+        const [leaderboard, err] = await fetchLeaderboard();
+        this.leaderboard = leaderboard;
+        this.err = err;
+        // Hide loading spinner
+        this.loading = false;
+    },
+    methods: {
+        localize,
+    },
 };
