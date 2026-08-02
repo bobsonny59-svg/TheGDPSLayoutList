@@ -36,10 +36,12 @@
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
-            <div class="logo">
-                <h2>Larp List</h2>
-                <p>v1.0.0</p>
+            <!-- FIXED LOGO: Changed display to flex and row so it's 1 line -->
+            <div class="logo" style="display: flex; align-items: center; gap: 12px;">
+                <h2 style="margin: 0; font-size: 28px; font-weight: 700;">Larp List</h2>
+                <p style="margin: 0; font-size: 14px; font-weight: 500; opacity: 0.8; padding-top: 2px;">v1.0.0</p>
             </div>
+            
             <nav class="nav">
                 <router-link class="nav__tab" to="/">
                     <span class="type-label-lg">List</span>
@@ -53,7 +55,7 @@
                 
                 <div class="nav__actions" style="display: flex; align-items: center; gap: 12px;">
                     
-                    <!-- Dark Mode Toggle Button (MOVED TO FRONT) -->
+                    <!-- Dark Mode Toggle Button -->
                     <button
                         class="nav__icon"
                         @click.prevent="store.toggleDark()"
@@ -66,12 +68,12 @@
                         />
                     </button>
 
-                    <!-- Discord Icon (MOVED TO FRONT) -->
+                    <!-- Discord Icon -->
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; justify-content: center; padding: 4px; text-decoration: none;">
                         <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
                     </a>
 
-                    <!-- Separator line for visual neatness -->
+                    <!-- Separator line -->
                     <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.3);"></div>
 
                     <!-- Login and Register buttons -->
