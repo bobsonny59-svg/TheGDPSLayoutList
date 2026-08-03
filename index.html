@@ -61,8 +61,8 @@
                         <router-link to="/register" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Register</router-link>
                     </template>
                     <template v-else>
-                        <!-- CHANGED: Profile button now calls the popup component -->
-                        <a @click.prevent="$refs.profilePopup.open()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Profile</a>
+                        <!-- Calls the popup via store -->
+                        <a @click.prevent="store.openProfile()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Profile</a>
                         <a @click.prevent="store.logout()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Logout</a>
                     </template>
                     
@@ -72,8 +72,8 @@
         
         <router-view :class="{ dark: store.dark }"></router-view>
 
-        <!-- ADD THIS RIGHT BEFORE </body>: Renders the popup -->
-        <profile-popup ref="profilePopup"></profile-popup>
+        <!-- Renders the popup on screen -->
+        <profile-popup></profile-popup>
 
     </body>
 </html>
