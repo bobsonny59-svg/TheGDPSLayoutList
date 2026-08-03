@@ -9,27 +9,22 @@ export const store = Vue.reactive({
         localStorage.setItem('dark', JSON.stringify(this.dark));
     },
 
-    // LOGIN
     login(username, password) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const foundUser = users.find(u => u.username === username && u.password === password);
-        if (foundUser && !foundUser.banned) { 
+        if (foundUser) {
             this.user = foundUser;
             localStorage.setItem('user', JSON.stringify(foundUser));
             return true;
-        } else if (foundUser && foundUser.banned) {
-            alert("This account has been banned.");
-            return false;
         }
         return false;
     },
 
-    // REGISTER
     register(username, password) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         if (users.find(u => u.username === username)) return false;
 
-        const newUser = { username, password, points: 0, levelsBeaten: [], banned: false };
+        const newUser = { username, password };
         users.push(newUser);
         localStorage.setItem('users', JSON.stringify(users));
         
@@ -38,148 +33,12 @@ export const store = Vue.reactive({
         return true;
     },
 
-    // ADD POINTS
-    addPoints(pointsToAdd, levelId) {
-        if (!this.user) return false;
-        if (this.user.levelsBeaten.includes(levelId)) {
-            alert("You've already beaten this level!");
-            return false;
-        }
-
-        this.user.points += pointsToAdd;
-        this.user.levelsBeaten.push(levelId);
-
-        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.username === this.user.username);
-        if (userIndex !== -1) {
-            allUsers[userIndex] = this.user;
-            localStorage.setItem('users', JSON.stringify(allUsers));
-        }
-
-        localStorage.setItem('user', JSON.stringify(this.user));
-        return true;
-    },
-
-    // ADMIN: BAN USER (Only works for exact match "Larpuk")
-    banUser(username) {
-        if (this.user.username !== "Larpuk") return; 
-
-        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.username === username);
-        
-        if (userIndex !== -1) {
-            allUsers[userIndex].banned = true;
-            localStorage.setItem('users', JSON.stringify(allUsers));
-            
-            if (this.user.username === username) {
-                this.logout();
-            }
-            return true;
-        }
-        return false;
-    },
-
-    // ADMIN: UNBAN USER (Only works for exact match "Larpuk")
-    unbanUser(username) {
-        if (this.user.username !== "Larpuk") return; 
-
-        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
-        const userIndex = allUsers.findIndex(u => u.username === username);
-        
-        if (userIndex !== -1) {
-            allUsers[userIndex].banned = false;
-            localStorage.setItem('users', JSON.stringify(allUsers));
-            return true;
-        }
-        return false;
-    },
-
     logout() {
         this.user = null;
         localStorage.removeItem('user');
     }
 });
 
-// --- ADMIN PANEL COMPONENT ---
-const AdminPanel = {
-    data() {
-        return {
-            users: [],
-            showPanel: false
-        }
-    },
-    mounted() {
-        this.loadUsers();
-    },
-    methods: {
-        loadUsers() {
-            this.users = JSON.parse(localStorage.getItem('users')) || [];
-        },
-        handleBan(username) {
-            if(confirm(`Are you sure you want to ban ${username}?`)) {
-                store.banUser(username);
-                this.loadUsers();
-            }
-        },
-        handleUnban(username) {
-            if(confirm(`Unban ${username}?`)) {
-                store.unbanUser(username);
-                this.loadUsers();
-            }
-        }
-    },
-    template: `
-        <div>
-            <!-- Button ONLY appears if username is exactly "Larpuk" -->
-            <button v-if="store.user && store.user.username === 'Larpuk'" @click="showPanel = !showPanel" style="
-                position: fixed; 
-                bottom: 20px; 
-                right: 20px; 
-                z-index: 999; 
-                padding: 15px 20px; 
-                background: #2b6ef0; 
-                color: white; 
-                border: none; 
-                border-radius: 50px; 
-                font-weight: bold; 
-                font-family: 'Lexend Deca', sans-serif;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-                cursor: pointer;
-            ">
-                Admin Panel
-            </button>
-
-            <!-- Side Panel -->
-            <div v-if="showPanel" style="
-                position: fixed; 
-                bottom: 80px; 
-                right: 20px; 
-                z-index: 999; 
-                width: 300px; 
-                max-height: 500px; 
-                background: white; 
-                border-radius: 12px; 
-                padding: 20px; 
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-                overflow-y: auto;
-                font-family: 'Lexend Deca', sans-serif;
-            ">
-                <h3 style="margin: 0 0 15px 0; color: #2b6ef0;">Admin Controls</h3>
-                <div v-for="user in users" :key="user.username" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 8px 0;">
-                    <div>
-                        <span style="font-weight: 600; font-size: 14px;">{{ user.username }}</span>
-                        <span v-if="user.banned" style="margin-left: 8px; font-size: 10px; background: #ff4d4f; color: white; padding: 2px 8px; border-radius: 10px;">BANNED</span>
-                    </div>
-                    <button v-if="!user.banned" @click="handleBan(user.username)" style="background: #ff4d4f; color: white; border: none; padding: 4px 12px; border-radius: 12px; cursor: pointer; font-size: 12px; font-family: 'Lexend Deca', sans-serif;">Ban</button>
-                    <button v-else @click="handleUnban(user.username)" style="background: #52c41a; color: white; border: none; padding: 4px 12px; border-radius: 12px; cursor: pointer; font-size: 12px; font-family: 'Lexend Deca', sans-serif;">Unban</button>
-                </div>
-                <button @click="showPanel = false" style="width: 100%; margin-top: 15px; padding: 8px; background: #f0f2f5; border: none; border-radius: 8px; cursor: pointer; font-family: 'Lexend Deca', sans-serif;">Close</button>
-            </div>
-        </div>
-    `
-};
-
-// --- LOGIN COMPONENT ---
 const Login = {
     data() { return { username: '', password: '', error: '' } },
     methods: {
@@ -210,7 +69,6 @@ const Login = {
     `
 };
 
-// --- REGISTER COMPONENT ---
 const Register = {
     data() { return { username: '', password: '', error: '', success: '' } },
     methods: {
@@ -243,13 +101,9 @@ const Register = {
     `
 };
 
-// --- ROUTER SETUP ---
 const app = Vue.createApp({
     data: () => ({ store }),
 });
-
-// 🔥 THIS IS THE NEW LINE THAT MAKES THE ADMIN BUTTON WORK 🔥
-app.component('AdminPanel', AdminPanel);
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
