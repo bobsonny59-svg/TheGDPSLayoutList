@@ -13,7 +13,7 @@ export const store = Vue.reactive({
     login(username, password) {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const foundUser = users.find(u => u.username === username && u.password === password);
-        if (foundUser && !foundUser.banned) { // Check if banned
+        if (foundUser && !foundUser.banned) { 
             this.user = foundUser;
             localStorage.setItem('user', JSON.stringify(foundUser));
             return true;
@@ -60,9 +60,9 @@ export const store = Vue.reactive({
         return true;
     },
 
-    // ADMIN: BAN USER
+    // ADMIN: BAN USER (Only works for exact match "Larpuk")
     banUser(username) {
-        if (this.user.username !== "larpuk") return; // Only larpuk can ban
+        if (this.user.username !== "Larpuk") return; 
 
         let allUsers = JSON.parse(localStorage.getItem('users')) || [];
         const userIndex = allUsers.findIndex(u => u.username === username);
@@ -71,7 +71,6 @@ export const store = Vue.reactive({
             allUsers[userIndex].banned = true;
             localStorage.setItem('users', JSON.stringify(allUsers));
             
-            // If the user is currently logged in and was just banned, force logout them
             if (this.user.username === username) {
                 this.logout();
             }
@@ -80,9 +79,9 @@ export const store = Vue.reactive({
         return false;
     },
 
-    // ADMIN: UNBAN USER
+    // ADMIN: UNBAN USER (Only works for exact match "Larpuk")
     unbanUser(username) {
-        if (this.user.username !== "larpuk") return; // Only larpuk can unban
+        if (this.user.username !== "Larpuk") return; 
 
         let allUsers = JSON.parse(localStorage.getItem('users')) || [];
         const userIndex = allUsers.findIndex(u => u.username === username);
@@ -131,8 +130,8 @@ const AdminPanel = {
     },
     template: `
         <div>
-            <!-- Floating button only visible to larpuk -->
-            <button v-if="store.user && store.user.username === 'larpuk'" @click="showPanel = !showPanel" style="
+            <!-- Button ONLY appears if username is exactly "Larpuk" -->
+            <button v-if="store.user && store.user.username === 'Larpuk'" @click="showPanel = !showPanel" style="
                 position: fixed; 
                 bottom: 20px; 
                 right: 20px; 
