@@ -246,8 +246,10 @@ const Register = {
 // --- ROUTER SETUP ---
 const app = Vue.createApp({
     data: () => ({ store }),
-    components: { AdminPanel } // Register the admin panel
 });
+
+// 🔥 THIS IS THE NEW LINE THAT MAKES THE ADMIN BUTTON WORK 🔥
+app.component('AdminPanel', AdminPanel);
 
 const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
