@@ -38,32 +38,35 @@
                 <router-link class="nav__tab" to="/roulette">
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
-                
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 8px;">
+                <div class="nav__actions" style="display: flex; align-items: center;">
                     
-                    <!-- 1. DISCORD ICON -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
+                    <!-- 1. DISCORD ICON (No changes) -->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
+                        <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
 
                     <!-- 2. LIGHT/DARK MODE TOGGLE (Moved next to Discord) -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="display: flex; align-items: center; background: transparent; border: none; cursor: pointer; padding: 4px;">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 24px; height: 24px; display: block;" />
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="margin-right: 8px;">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
                     </button>
 
                     <!-- 3. SUBMIT RECORD -->
-                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px; margin-left: 4px;">Submit Record</a>
+                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
 
-                    <!-- 4. LOGIN / PROFILE / LOGOUT BUTTONS -->
-                    <!-- FORCED TO EXACT SAME SIZE AND STYLE AS SUBMIT RECORD -->
+                    <!-- ========================================== -->
+                    <!-- 4. LOGIN / PROFILE / LOGOUT BUTTONS       -->
+                    <!-- ========================================== -->
                     <template v-if="!store.user">
-                        <router-link to="/login" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Login</router-link>
-                        <router-link to="/register" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Register</router-link>
+                        <!-- When logged out, show Login & Register -->
+                        <router-link class="nav__cta type-label-lg" to="/login" style="margin-left: 8px;">Login</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/register" style="margin-left: 8px;">Register</router-link>
                     </template>
                     <template v-else>
-                        <router-link to="/profile" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px; cursor: pointer;">Logout</a>
+                        <!-- When logged in, show Profile & Logout -->
+                        <router-link class="nav__cta type-label-lg" to="/profile" style="margin-left: 8px;">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="margin-left: 8px; cursor: pointer;">Logout</a>
                     </template>
+                    
                 </div>
             </nav>
         </header>
