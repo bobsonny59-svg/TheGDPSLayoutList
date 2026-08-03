@@ -32,7 +32,9 @@
         />
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
+        
+        <!-- ⚠️ FIX: I removed the duplicate <script> here. -->
+        <!-- <script type="module" src="/js/main.js"></script>  -->
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
@@ -51,25 +53,13 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 <div class="nav__actions">
-                    <!-- SHOW LOGIN/REGISTER WHEN LOGGED OUT -->
-                    <template v-if="!store.user">
-                        <router-link class="nav__cta type-label-lg" to="/login">
-                            Login
-                        </router-link>
-                        <router-link class="nav__cta type-label-lg" to="/register">
-                            Register
-                        </router-link>
-                    </template>
-                    
-                    <!-- SHOW LOGOUT WHEN LOGGED IN -->
-                    <template v-else>
-                        <span class="type-label-lg" style="color: white; margin-right: 10px; opacity: 0.9;">
-                            {{ store.user.username }}
-                        </span>
-                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">
-                            Logout
-                        </a>
-                    </template>
+                    <!-- Login and Register buttons -->
+                    <router-link class="nav__cta type-label-lg" to="/login">
+                        Login
+                    </router-link>
+                    <router-link class="nav__cta type-label-lg" to="/register">
+                        Register
+                    </router-link>
                     
                     <button
                         class="nav__icon"
@@ -84,21 +74,152 @@
                     <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
-                    <!-- List record submission form -->
+                    <!-- List record submission form, add a link to replace the '#' when putting a link to your list submission form-->
                     <a
                         class="nav__cta type-label-lg"
                         href="https://forms.gle/irLaSCGuXMbEwD28A"
                         target="_blank"
-                        style="margin-left: 10px;"
                         >Submit Record</a
                     >
                 </div>
             </nav>
         </header>
-        
         <router-view :class="{ dark: store.dark }"></router-view>
         
-        <!-- Added this single line to show the Admin Panel -->
-        <admin-panel></admin-panel>
+        <!-- ⚠️ FIX: I removed the <admin-panel> tag here. -->
+
+        <!-- ================================================================== -->
+        <!-- FULL VUE APP EMBEDDED HERE (This replaces the external main.js)  -->
+        <!-- ================================================================== -->
+        <script>
+            const { createApp, reactive } = Vue;
+            const { createRouter, createWebHashHistory } = VueRouter;
+
+            // 1. STORE
+            const store = reactive({
+                dark: JSON.parse(localStorage.getItem('dark')) || false,
+                user: JSON.parse(localStorage.getItem('user')) || null, 
+                
+                toggleDark() {
+                    this.dark = !this.dark;
+                    localStorage.setItem('dark', JSON.stringify(this.dark));
+                },
+
+                // SIMPLE LOGIN
+                login(username, password) {
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    const foundUser = users.find(u => u.username === username && u.password === password);
+                    if (foundUser) {
+                        this.user = foundUser;
+                        localStorage.setItem('user', JSON.stringify(foundUser));
+                        return true;
+                    }
+                    return false;
+                },
+
+                // SIMPLE REGISTER
+                register(username, password) {
+                    const users = JSON.parse(localStorage.getItem('users')) || [];
+                    if (users.find(u => u.username === username)) return false;
+
+                    const newUser = { username, password };
+                    users.push(newUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    this.user = newUser;
+                    localStorage.setItem('user', JSON.stringify(newUser));
+                    return true;
+                },
+
+                logout() {
+                    this.user = null;
+                    localStorage.removeItem('user');
+                }
+            });
+
+            // 2. LOGIN COMPONENT
+            const Login = {
+                data() { return { username: '', password: '', error: '' } },
+                methods: {
+                    handleLogin() {
+                        if (!this.username || !this.password) {
+                            this.error = "Please fill in all fields.";
+                            return;
+                        }
+                        if (store.login(this.username, this.password)) {
+                            this.error = '';
+                            this.$router.push('/');
+                        } else {
+                            this.error = "Invalid username or password.";
+                        }
+                    }
+                },
+                template: `
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+                        <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                            <h1 style="font-family: 'Lexend Deca'; font-size: 28px; margin-bottom: 30px;">Login</h1>
+                            <div v-if="error" style="color: #ff4d4f; background: #fff2f0; border: 1px solid #ffccc7; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ error }}</div>
+                            <input v-model="username" type="text" placeholder="Username" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                            <input v-model="password" type="password" placeholder="Password" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                            <button @click="handleLogin" style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">Login</button>
+                            <a href="#/register" style="display: block; margin-top: 20px; color: #666; text-decoration: none;">Don't have an account? <span style="color: #2b6ef0; font-weight: 600;">Register</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 3. REGISTER COMPONENT
+            const Register = {
+                data() { return { username: '', password: '', error: '', success: '' } },
+                methods: {
+                    handleRegister() {
+                        if (!this.username || !this.password) {
+                            this.error = "Please fill in all fields.";
+                            return;
+                        }
+                        if (store.register(this.username, this.password)) {
+                            this.error = '';
+                            this.success = "Account created! Logging you in...";
+                            setTimeout(() => this.$router.push('/'), 1000);
+                        } else {
+                            this.error = "Username already taken.";
+                        }
+                    }
+                },
+                template: `
+                    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+                        <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                            <h1 style="font-family: 'Lexend Deca'; font-size: 28px; margin-bottom: 30px;">Register</h1>
+                            <div v-if="error" style="color: #ff4d4f; background: #fff2f0; border: 1px solid #ffccc7; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ error }}</div>
+                            <div v-if="success" style="color: #52c41a; background: #f6ffed; border: 1px solid #b7eb8f; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ success }}</div>
+                            <input v-model="username" type="text" placeholder="Username" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                            <input v-model="password" type="password" placeholder="Password" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                            <button @click="handleRegister" style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">Register</button>
+                            <a href="#/login" style="display: block; margin-top: 20px; color: #666; text-decoration: none;">Already have an account? <span style="color: #2b6ef0; font-weight: 600;">Login</span></a>
+                        </div>
+                    </div>
+                `
+            };
+
+            // 4. IMPORT ROUTES (Connects to your original List/Leaderboard pages)
+            import('/js/routes.js').then(module => {
+                const routes = module.default;
+
+                const router = createRouter({
+                    history: createWebHashHistory(),
+                    routes: [
+                        ...routes,
+                        { path: '/login', component: Login },
+                        { path: '/register', component: Register }
+                    ],
+                });
+
+                const app = createApp({
+                    data: () => ({ store })
+                });
+
+                app.use(router);
+                app.mount('#app');
+            });
+        </script>
     </body>
 </html>
