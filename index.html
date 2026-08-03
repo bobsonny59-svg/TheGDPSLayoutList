@@ -23,16 +23,18 @@
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <!-- Added style="flex-wrap: nowrap;" to keep everything on one row -->
-        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; flex-wrap: nowrap; overflow-x: auto;">
+        <!-- FLEX: Keeps everything in one line, allows horizontal scrolling on mobile -->
+        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; flex-wrap: nowrap; overflow-x: auto; gap: 15px;">
             
-            <!-- FIXED: Logo is now one single line -->
-            <div class="logo" style="display: flex; align-items: center; gap: 10px; white-space: nowrap;">
-                <h2 style="margin: 0; font-size: 24px; font-weight: 700;">Larp List</h2>
-                <p style="margin: 0; font-size: 12px; opacity: 0.8;">v1.0.0</p>
+            <!-- LOGO: Forced to 1 line -->
+            <div class="logo" style="display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;">
+                <h2 style="margin: 0; font-size: 22px; font-weight: 700;">Larp List</h2>
+                <p style="margin: 0; font-size: 11px; opacity: 0.8;">v1.0.0</p>
             </div>
             
             <nav class="nav" style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+                
+                <!-- NAV TABS -->
                 <router-link class="nav__tab" to="/">
                     <span class="type-label-lg">List</span>
                 </router-link>
@@ -43,30 +45,30 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 
-                <!-- Tightened the gap between icons and buttons so they all fit -->
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                <!-- BUTTONS & ICONS: Spacing tight, gaps removed -->
+                <div class="nav__actions" style="display: flex; align-items: center; gap: 0; flex-shrink: 0; margin-left: 0;">
                     
-                    <!-- 1. Moon Icon -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; padding: 4px;">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 22px; height: 22px; display: block;" />
+                    <!-- MOON ICON -->
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; padding: 4px 8px; display: flex; align-items: center;">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 20px; height: 20px; display: block;" />
                     </button>
 
-                    <!-- 2. Discord Icon -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 22px; height: 22px; display: block;" />
+                    <!-- DISCORD ICON -->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px 8px;">
+                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 20px; height: 20px; display: block;" />
                     </a>
 
-                    <!-- 3. Submit Record -->
-                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
+                    <!-- SUBMIT RECORD (Smaller padding to match the screenshot exactly) -->
+                    <a class="type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 2px; white-space: nowrap;">Submit Record</a>
 
-                    <!-- 4. Login / Profile / Logout -->
+                    <!-- LOGIN / REGISTER / PROFILE / LOGOUT -->
                     <template v-if="!store.user">
-                        <router-link class="nav__cta type-label-lg" to="/login">Login</router-link>
-                        <router-link class="nav__cta type-label-lg" to="/register">Register</router-link>
+                        <router-link to="/login" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Login</router-link>
+                        <router-link to="/register" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Register</router-link>
                     </template>
                     <template v-else>
-                        <router-link class="nav__cta type-label-lg" to="/profile">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">Logout</a>
+                        <router-link to="/profile" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap; cursor: pointer;">Logout</a>
                     </template>
                     
                 </div>
