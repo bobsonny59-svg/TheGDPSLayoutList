@@ -23,52 +23,55 @@
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <!-- FLEX: Keeps everything in one line, allows horizontal scrolling on mobile -->
-        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; flex-wrap: nowrap; overflow-x: auto; gap: 15px;">
+        <!-- Removed flex-wrap and added min-width to force it to fill the bar -->
+        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: stretch; padding: 0 15px; height: 60px; width: 100%; box-sizing: border-box;">
             
-            <!-- LOGO: Forced to 1 line -->
-            <div class="logo" style="display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0;">
-                <h2 style="margin: 0; font-size: 22px; font-weight: 700;">Larp List</h2>
+            <!-- LOGO: Forced to 1 line, centered vertically -->
+            <div class="logo" style="display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; padding-right: 15px;">
+                <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Larp List</h2>
                 <p style="margin: 0; font-size: 11px; opacity: 0.8;">v1.0.0</p>
             </div>
             
-            <nav class="nav" style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+            <!-- NAV: Fills remaining space -->
+            <nav class="nav" style="display: flex; align-items: center; flex-grow: 1; justify-content: space-between; height: 100%; width: 100%;">
                 
-                <!-- NAV TABS -->
-                <router-link class="nav__tab" to="/">
-                    <span class="type-label-lg">List</span>
-                </router-link>
-                <router-link class="nav__tab" to="/leaderboard">
-                    <span class="type-label-lg">Leaderboard</span>
-                </router-link>
-                <router-link class="nav__tab" to="/roulette">
-                    <span class="type-label-lg">Roulette</span>
-                </router-link>
+                <!-- LEFT SIDE: LINKS -->
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <router-link class="nav__tab" to="/">
+                        <span class="type-label-lg">List</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/leaderboard">
+                        <span class="type-label-lg">Leaderboard</span>
+                    </router-link>
+                    <router-link class="nav__tab" to="/roulette">
+                        <span class="type-label-lg">Roulette</span>
+                    </router-link>
+                </div>
                 
-                <!-- BUTTONS & ICONS: Spacing tight, gaps removed -->
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 0; flex-shrink: 0; margin-left: 0;">
+                <!-- RIGHT SIDE: ICONS & BUTTONS (Fills and spreads out across the right side) -->
+                <div class="nav__actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; height: 100%; flex-grow: 1; padding-left: 10px;">
                     
                     <!-- MOON ICON -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; padding: 4px 8px; display: flex; align-items: center;">
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; display: flex; align-items: center;">
                         <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 20px; height: 20px; display: block;" />
                     </button>
 
                     <!-- DISCORD ICON -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px 8px;">
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center;">
                         <img src="/assets/discord.svg" alt="Discord Logo" style="width: 20px; height: 20px; display: block;" />
                     </a>
 
-                    <!-- SUBMIT RECORD (Smaller padding to match the screenshot exactly) -->
-                    <a class="type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 2px; white-space: nowrap;">Submit Record</a>
+                    <!-- SUBMIT RECORD: Uses original classes so it has your correct font and size -->
+                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Submit Record</a>
 
-                    <!-- LOGIN / REGISTER / PROFILE / LOGOUT -->
+                    <!-- LOGIN / REGISTER / PROFILE / LOGOUT: ALSO USES ORIGINAL CLASSES TO MATCH SIZES -->
                     <template v-if="!store.user">
-                        <router-link to="/login" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Login</router-link>
-                        <router-link to="/register" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Register</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/login" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Login</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/register" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Register</router-link>
                     </template>
                     <template v-else>
-                        <router-link to="/profile" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap;">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" style="display: inline-flex; align-items: center; padding: 5px 12px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; margin-left: 4px; white-space: nowrap; cursor: pointer;">Logout</a>
+                        <router-link class="nav__cta type-label-lg" to="/profile" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; cursor: pointer;">Logout</a>
                     </template>
                     
                 </div>
