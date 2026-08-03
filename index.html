@@ -33,8 +33,8 @@
         <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
         <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
         
-        <!-- ⚠️ FIX: I removed the duplicate <script> here. -->
-        <!-- <script type="module" src="/js/main.js"></script>  -->
+        <!-- THIS WAS CAUSING THE DUPLICATE HEADER, SO I REMOVED IT -->
+        <!-- <script type="module" src="/js/main.js"></script> -->
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
@@ -85,11 +85,9 @@
             </nav>
         </header>
         <router-view :class="{ dark: store.dark }"></router-view>
-        
-        <!-- ⚠️ FIX: I removed the <admin-panel> tag here. -->
 
         <!-- ================================================================== -->
-        <!-- FULL VUE APP EMBEDDED HERE (This replaces the external main.js)  -->
+        <!-- FULL VUE APP EMBEDDED HERE (Replaces the broken main.js)          -->
         <!-- ================================================================== -->
         <script>
             const { createApp, reactive } = Vue;
@@ -105,7 +103,7 @@
                     localStorage.setItem('dark', JSON.stringify(this.dark));
                 },
 
-                // SIMPLE LOGIN
+                // LOGIN
                 login(username, password) {
                     const users = JSON.parse(localStorage.getItem('users')) || [];
                     const foundUser = users.find(u => u.username === username && u.password === password);
@@ -117,7 +115,7 @@
                     return false;
                 },
 
-                // SIMPLE REGISTER
+                // REGISTER
                 register(username, password) {
                     const users = JSON.parse(localStorage.getItem('users')) || [];
                     if (users.find(u => u.username === username)) return false;
@@ -200,7 +198,7 @@
                 `
             };
 
-            // 4. IMPORT ROUTES (Connects to your original List/Leaderboard pages)
+            // 4. IMPORT ROUTES (Connects to your original pages)
             import('/js/routes.js').then(module => {
                 const routes = module.default;
 
