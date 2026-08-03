@@ -24,11 +24,14 @@
     </head>
     <body id="app">
         <header :class="{ dark: store.dark }">
+            <!-- YOUR EXACT LOGO (No text changes) -->
             <div class="logo">
                 <h2>Larp List</h2>
                 <p>v1.0.0</p>
             </div>
+            
             <nav class="nav">
+                <!-- YOUR EXACT NAV TABS (Packs removed) -->
                 <router-link class="nav__tab" to="/">
                     <span class="type-label-lg">List</span>
                 </router-link>
@@ -38,33 +41,30 @@
                 <router-link class="nav__tab" to="/roulette">
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
-                <div class="nav__actions" style="display: flex; align-items: center;">
+                
+                <div class="nav__actions" style="display: flex; align-items: center; gap: 8px;">
                     
-                    <!-- 1. DISCORD ICON (No changes) -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
-                    </a>
-
-                    <!-- 2. LIGHT/DARK MODE TOGGLE (Moved next to Discord) -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="margin-right: 8px;">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
+                    <!-- 1. Moon Icon (Dark Mode) -->
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; padding: 4px;">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 22px; height: 22px; display: block;" />
                     </button>
 
-                    <!-- 3. SUBMIT RECORD -->
+                    <!-- 2. Discord Icon -->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px;">
+                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 22px; height: 22px; display: block;" />
+                    </a>
+
+                    <!-- 3. Submit Record Button -->
                     <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
 
-                    <!-- ========================================== -->
-                    <!-- 4. LOGIN / PROFILE / LOGOUT BUTTONS       -->
-                    <!-- ========================================== -->
+                    <!-- 4. Login / Profile / Logout -->
                     <template v-if="!store.user">
-                        <!-- When logged out, show Login & Register -->
-                        <router-link class="nav__cta type-label-lg" to="/login" style="margin-left: 8px;">Login</router-link>
-                        <router-link class="nav__cta type-label-lg" to="/register" style="margin-left: 8px;">Register</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/login">Login</router-link>
+                        <router-link class="nav__cta type-label-lg" to="/register">Register</router-link>
                     </template>
                     <template v-else>
-                        <!-- When logged in, show Profile & Logout -->
-                        <router-link class="nav__cta type-label-lg" to="/profile" style="margin-left: 8px;">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="margin-left: 8px; cursor: pointer;">Logout</a>
+                        <router-link class="nav__cta type-label-lg" to="/profile">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">Logout</a>
                     </template>
                     
                 </div>
