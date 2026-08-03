@@ -38,33 +38,32 @@
                 <router-link class="nav__tab" to="/roulette">
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
-                <div class="nav__actions">
+                
+                <div class="nav__actions" style="display: flex; align-items: center; gap: 8px;">
+                    
                     <!-- 1. DISCORD ICON -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
-                        <img src="/assets/discord.svg" alt="Discord Logo" />
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 4px;">
+                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 24px; height: 24px; display: block;" />
                     </a>
 
-                    <!-- 2. SUBMIT RECORD -->
-                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
+                    <!-- 2. LIGHT/DARK MODE TOGGLE (Moved next to Discord) -->
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="display: flex; align-items: center; background: transparent; border: none; cursor: pointer; padding: 4px;">
+                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 24px; height: 24px; display: block;" />
+                    </button>
 
-                    <!-- ========================================== -->
-                    <!-- 3. LOGIN / PROFILE / LOGOUT BUTTONS       -->
-                    <!-- ========================================== -->
+                    <!-- 3. SUBMIT RECORD -->
+                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px; margin-left: 4px;">Submit Record</a>
+
+                    <!-- 4. LOGIN / PROFILE / LOGOUT BUTTONS -->
+                    <!-- FORCED TO EXACT SAME SIZE AND STYLE AS SUBMIT RECORD -->
                     <template v-if="!store.user">
-                        <!-- Show Login and Register when logged out -->
-                        <router-link class="nav__cta type-label-lg" to="/login">Login</router-link>
-                        <router-link class="nav__cta type-label-lg" to="/register">Register</router-link>
+                        <router-link to="/login" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Login</router-link>
+                        <router-link to="/register" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Register</router-link>
                     </template>
                     <template v-else>
-                        <!-- Show Profile and Logout when logged in -->
-                        <router-link class="nav__cta type-label-lg" to="/profile">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="cursor: pointer;">Logout</a>
+                        <router-link to="/profile" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px;">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" style="display: inline-flex; align-items: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 14px; cursor: pointer;">Logout</a>
                     </template>
-                    
-                    <!-- 4. DARK MODE TOGGLE (Kept on the far right) -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" />
-                    </button>
                 </div>
             </nav>
         </header>
