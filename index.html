@@ -61,8 +61,7 @@
                         <router-link to="/register" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Register</router-link>
                     </template>
                     <template v-else>
-                        <!-- Calls the popup via store -->
-                        <a @click.prevent="store.openProfile()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Profile</a>
+                        <!-- REMOVED: Profile button is completely gone -->
                         <a @click.prevent="store.logout()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Logout</a>
                     </template>
                     
@@ -71,9 +70,6 @@
         </header>
         
         <router-view :class="{ dark: store.dark }"></router-view>
-
-        <!-- Renders the popup on screen -->
-        <profile-popup></profile-popup>
 
     </body>
 </html>
