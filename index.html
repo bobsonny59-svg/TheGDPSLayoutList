@@ -23,20 +23,19 @@
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <!-- Removed flex-wrap and added min-width to force it to fill the bar -->
-        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: stretch; padding: 0 15px; height: 60px; width: 100%; box-sizing: border-box;">
+        <!-- Full width header, stretched to fill -->
+        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 60px; width: 100%; box-sizing: border-box;">
             
-            <!-- LOGO: Forced to 1 line, centered vertically -->
-            <div class="logo" style="display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0; padding-right: 15px;">
+            <!-- LOGO: One line, ultra-compact -->
+            <div class="logo" style="display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;">
                 <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Larp List</h2>
                 <p style="margin: 0; font-size: 11px; opacity: 0.8;">v1.0.0</p>
             </div>
             
-            <!-- NAV: Fills remaining space -->
-            <nav class="nav" style="display: flex; align-items: center; flex-grow: 1; justify-content: space-between; height: 100%; width: 100%;">
+            <nav class="nav" style="display: flex; align-items: center; justify-content: space-between; flex-grow: 1; height: 100%;">
                 
-                <!-- LEFT SIDE: LINKS -->
-                <div style="display: flex; align-items: center; gap: 15px;">
+                <!-- LEFT SIDE: Links with tight spacing -->
+                <div style="display: flex; align-items: center; gap: 12px;">
                     <router-link class="nav__tab" to="/">
                         <span class="type-label-lg">List</span>
                     </router-link>
@@ -48,30 +47,29 @@
                     </router-link>
                 </div>
                 
-                <!-- RIGHT SIDE: ICONS & BUTTONS (Fills and spreads out across the right side) -->
-                <div class="nav__actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; height: 100%; flex-grow: 1; padding-left: 10px;">
+                <!-- RIGHT SIDE: ULTRA TIGHT layout - Barely any gaps -->
+                <div class="nav__actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; flex-grow: 1; padding-left: 10px;">
                     
-                    <!-- MOON ICON -->
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; display: flex; align-items: center;">
+                    <!-- Moon Icon (tight) -->
+                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; display: flex; align-items: center; padding: 0;">
                         <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 20px; height: 20px; display: block;" />
                     </button>
 
-                    <!-- DISCORD ICON -->
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center;">
+                    <!-- Discord Icon (tight) -->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 0;">
                         <img src="/assets/discord.svg" alt="Discord Logo" style="width: 20px; height: 20px; display: block;" />
                     </a>
 
-                    <!-- SUBMIT RECORD: Uses original classes so it has your correct font and size -->
-                    <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Submit Record</a>
+                    <!-- BUTTONS: Exact size to match screenshot, using your original font classes -->
+                    <a class="type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Submit Record</a>
 
-                    <!-- LOGIN / REGISTER / PROFILE / LOGOUT: ALSO USES ORIGINAL CLASSES TO MATCH SIZES -->
                     <template v-if="!store.user">
-                        <router-link class="nav__cta type-label-lg" to="/login" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Login</router-link>
-                        <router-link class="nav__cta type-label-lg" to="/register" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Register</router-link>
+                        <router-link to="/login" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Login</router-link>
+                        <router-link to="/register" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Register</router-link>
                     </template>
                     <template v-else>
-                        <router-link class="nav__cta type-label-lg" to="/profile" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap;">Profile</router-link>
-                        <a @click.prevent="store.logout()" href="#" class="nav__cta type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; cursor: pointer;">Logout</a>
+                        <router-link to="/profile" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Profile</router-link>
+                        <a @click.prevent="store.logout()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Logout</a>
                     </template>
                     
                 </div>
