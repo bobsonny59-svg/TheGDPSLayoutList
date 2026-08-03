@@ -1,79 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=1024" />
-        <title>the larp list</title>
+import routes from './routes.js';
 
-        <link rel="icon" href="/list_icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@500;700&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="/css/reset.css" />
-        <link rel="stylesheet" type="text/css" href="/css/typography.css" />
-        <link rel="stylesheet" type="text/css" href="/css/main.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/list.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/leaderboard.css" />
-        <link rel="stylesheet" type="text/css" href="/css/pages/roulette.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/nav.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/btn.css" />
-        <link rel="stylesheet" type="text/css" href="/css/components/tabs.css" />
-        <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.js"></script>
-        <script src="https://unpkg.com/vue-router@4.0.14/dist/vue-router.global.prod.js"></script>
-        <script type="module" src="/js/main.js"></script>
-    </head>
-    <body id="app">
-        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 60px; width: 100%; box-sizing: border-box;">
-            
-            <div class="logo" style="display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;">
-                <h2 style="margin: 0; font-size: 20px; font-weight: 700;">Larp List</h2>
-                <p style="margin: 0; font-size: 11px; opacity: 0.8;">v1.0.0</p>
-            </div>
-            
-            <nav class="nav" style="display: flex; align-items: center; justify-content: space-between; flex-grow: 1; height: 100%;">
-                
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <router-link class="nav__tab" to="/">
-                        <span class="type-label-lg">List</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/leaderboard">
-                        <span class="type-label-lg">Leaderboard</span>
-                    </router-link>
-                    <router-link class="nav__tab" to="/roulette">
-                        <span class="type-label-lg">Roulette</span>
-                    </router-link>
-                </div>
-                
-                <div class="nav__actions" style="display: flex; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; flex-grow: 1; padding-left: 10px;">
-                    
-                    <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; display: flex; align-items: center; padding: 0;">
-                        <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 20px; height: 20px; display: block;" />
-                    </button>
+export const store = Vue.reactive({
+    dark: JSON.parse(localStorage.getItem('dark')) || false,
+    user: JSON.parse(localStorage.getItem('user')) || null, 
+    showProfilePopup: false, // Controls the profile popup
+    
+    toggleDark() {
+        this.dark = !this.dark;
+        localStorage.setItem('dark', JSON.stringify(this.dark));
+    },
 
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="display: flex; align-items: center; padding: 0;">
-                        <img src="/assets/discord.svg" alt="Discord Logo" style="width: 20px; height: 20px; display: block;" />
-                    </a>
+    login(username, password) {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const foundUser = users.find(u => u.username === username && u.password === password);
+        if (foundUser) {
+            this.user = foundUser;
+            localStorage.setItem('user', JSON.stringify(foundUser));
+            return true;
+        }
+        return false;
+    },
 
-                    <a class="type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Submit Record</a>
+    register(username, password) {
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.find(u => u.username === username)) return false;
 
-                    <template v-if="!store.user">
-                        <router-link to="/login" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Login</router-link>
-                        <router-link to="/register" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap;">Register</router-link>
-                    </template>
-                    <template v-else>
-                        <!-- CHANGED: Profile button now calls the popup component -->
-                        <a @click.prevent="$refs.profilePopup.open()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Profile</a>
-                        <a @click.prevent="store.logout()" href="#" class="type-label-lg" style="display: inline-flex; align-items: center; justify-content: center; padding: 6px 14px; background: white; color: #2b6ef0; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 13px; white-space: nowrap; cursor: pointer;">Logout</a>
-                    </template>
-                    
-                </div>
-            </nav>
-        </header>
+        const newUser = { username, password };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
         
-        <router-view :class="{ dark: store.dark }"></router-view>
+        this.user = newUser;
+        localStorage.setItem('user', JSON.stringify(newUser));
+        return true;
+    },
 
-        <!-- ADD THIS RIGHT BEFORE </body>: Renders the popup -->
-        <profile-popup ref="profilePopup"></profile-popup>
+    logout() {
+        this.user = null;
+        localStorage.removeItem('user');
+        this.showProfilePopup = false;
+    },
 
-    </body>
-</html>
+    openProfile() {
+        this.showProfilePopup = true;
+    },
+
+    closeProfile() {
+        this.showProfilePopup = false;
+    }
+});
+
+// --- LOGIN COMPONENT ---
+const Login = {
+    data() { return { username: '', password: '', error: '' } },
+    methods: {
+        handleLogin() {
+            if (!this.username || !this.password) {
+                this.error = "Please fill in all fields.";
+                return;
+            }
+            if (store.login(this.username, this.password)) {
+                this.error = '';
+                this.$router.push('/');
+            } else {
+                this.error = "Invalid username or password.";
+            }
+        }
+    },
+    template: `
+        <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+            <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                <h1 style="font-family: 'Lexend Deca'; font-size: 28px; margin-bottom: 30px;">Login</h1>
+                <div v-if="error" style="color: #ff4d4f; background: #fff2f0; border: 1px solid #ffccc7; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ error }}</div>
+                <input v-model="username" type="text" placeholder="Username" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                <input v-model="password" type="password" placeholder="Password" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                <button @click="handleLogin" style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">Login</button>
+                <a href="#/register" style="display: block; margin-top: 20px; color: #666; text-decoration: none;">Don't have an account? <span style="color: #2b6ef0; font-weight: 600;">Register</span></a>
+            </div>
+        </div>
+    `
+};
+
+// --- REGISTER COMPONENT ---
+const Register = {
+    data() { return { username: '', password: '', error: '', success: '' } },
+    methods: {
+        handleRegister() {
+            if (!this.username || !this.password) {
+                this.error = "Please fill in all fields.";
+                return;
+            }
+            if (store.register(this.username, this.password)) {
+                this.error = '';
+                this.success = "Account created! Logging you in...";
+                setTimeout(() => this.$router.push('/'), 1000);
+            } else {
+                this.error = "Username already taken.";
+            }
+        }
+    },
+    template: `
+        <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); padding: 20px; background: #f0f2f5;">
+            <div style="background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: center;">
+                <h1 style="font-family: 'Lexend Deca'; font-size: 28px; margin-bottom: 30px;">Register</h1>
+                <div v-if="error" style="color: #ff4d4f; background: #fff2f0; border: 1px solid #ffccc7; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ error }}</div>
+                <div v-if="success" style="color: #52c41a; background: #f6ffed; border: 1px solid #b7eb8f; padding: 10px; border-radius: 8px; margin-bottom: 16px;">{{ success }}</div>
+                <input v-model="username" type="text" placeholder="Username" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                <input v-model="password" type="password" placeholder="Password" style="width: 100%; padding: 14px; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; box-sizing: border-box;">
+                <button @click="handleRegister" style="width: 100%; padding: 14px; background: #2b6ef0; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer;">Register</button>
+                <a href="#/login" style="display: block; margin-top: 20px; color: #666; text-decoration: none;">Already have an account? <span style="color: #2b6ef0; font-weight: 600;">Login</span></a>
+            </div>
+        </div>
+    `
+};
+
+// --- PROFILE POPUP COMPONENT ---
+const ProfilePopup = {
+    template: `
+        <div v-if="store.showProfilePopup" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;" @click.self="store.closeProfile()">
+            <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); min-width: 280px; text-align: center; position: relative; font-family: 'Lexend Deca', sans-serif;">
+                
+                <button @click="store.closeProfile()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 22px; cursor: pointer; color: #999;">&times;</button>
+                
+                <div style="width: 80px; height: 80px; background: #2b6ef0; color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 32px; font-weight: 700; margin: 0 auto 15px auto;">
+                    {{ store.user.username.charAt(0).toUpperCase() }}
+                </div>
+                
+                <h2 style="font-size: 22px; margin: 0 0 5px 0; color: #1a1a1a;">{{ store.user.username }}</h2>
+                <p style="font-size: 14px; color: #666; margin: 0 0 20px 0;">Logged in successfully</p>
+                
+                <button @click="store.logout()" style="padding: 8px 20px; background: #ff4d4f; color: white; border: none; border-radius: 6px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; font-size: 14px;">Logout</button>
+                <button @click="store.closeProfile()" style="padding: 8px 20px; background: #f0f2f5; color: #333; border: none; border-radius: 6px; font-weight: 700; font-family: 'Lexend Deca', sans-serif; cursor: pointer; font-size: 14px; margin-left: 10px;">Close</button>
+                
+            </div>
+        </div>
+    `
+};
+
+// --- ROUTER & MAIN APP SETUP ---
+const app = Vue.createApp({
+    data: () => ({ store }),
+    components: { ProfilePopup }
+});
+
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes: [
+        ...routes,
+        { path: '/login', component: Login },
+        { path: '/register', component: Register }
+    ],
+});
+
+app.use(router);
+app.mount('#app');
