@@ -80,12 +80,12 @@
                             alt=""
                         />
                     </button>
-                    
-                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd" style="margin-right: 10px;">
+                    <!-- Replace the '#' with your discord server's invite-->
+                    <a class="nav__icon" href="https://discord.gg/W9PhXXMSd">
                         <img src="/assets/discord.svg" alt="Discord Logo" />
                     </a>
                     
-                    <!-- List record submission form (Fixed spacing and shape) -->
+                    <!-- List record submission form -->
                     <a
                         class="nav__cta type-label-lg"
                         href="https://forms.gle/irLaSCGuXMbEwD28A"
@@ -96,6 +96,10 @@
                 </div>
             </nav>
         </header>
+        
         <router-view :class="{ dark: store.dark }"></router-view>
+        
+        <!-- The Admin Panel will appear here automatically -->
+        <admin-panel></admin-panel>
     </body>
 </html>
