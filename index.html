@@ -23,15 +23,16 @@
         <script type="module" src="/js/main.js"></script>
     </head>
     <body id="app">
-        <header :class="{ dark: store.dark }">
-            <!-- YOUR EXACT LOGO (No text changes) -->
-            <div class="logo">
-                <h2>Larp List</h2>
-                <p>v1.0.0</p>
+        <!-- Added style="flex-wrap: nowrap;" to keep everything on one row -->
+        <header :class="{ dark: store.dark }" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; flex-wrap: nowrap; overflow-x: auto;">
+            
+            <!-- FIXED: Logo is now one single line -->
+            <div class="logo" style="display: flex; align-items: center; gap: 10px; white-space: nowrap;">
+                <h2 style="margin: 0; font-size: 24px; font-weight: 700;">Larp List</h2>
+                <p style="margin: 0; font-size: 12px; opacity: 0.8;">v1.0.0</p>
             </div>
             
-            <nav class="nav">
-                <!-- YOUR EXACT NAV TABS (Packs removed) -->
+            <nav class="nav" style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
                 <router-link class="nav__tab" to="/">
                     <span class="type-label-lg">List</span>
                 </router-link>
@@ -42,9 +43,10 @@
                     <span class="type-label-lg">Roulette</span>
                 </router-link>
                 
-                <div class="nav__actions" style="display: flex; align-items: center; gap: 8px;">
+                <!-- Tightened the gap between icons and buttons so they all fit -->
+                <div class="nav__actions" style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
                     
-                    <!-- 1. Moon Icon (Dark Mode) -->
+                    <!-- 1. Moon Icon -->
                     <button class="nav__icon" @click.prevent="store.toggleDark()" style="background: transparent; border: none; cursor: pointer; padding: 4px;">
                         <img :src="store.dark ? '/assets/light.svg' : '/assets/dark.svg'" alt="" style="width: 22px; height: 22px; display: block;" />
                     </button>
@@ -54,7 +56,7 @@
                         <img src="/assets/discord.svg" alt="Discord Logo" style="width: 22px; height: 22px; display: block;" />
                     </a>
 
-                    <!-- 3. Submit Record Button -->
+                    <!-- 3. Submit Record -->
                     <a class="nav__cta type-label-lg" href="https://forms.gle/irLaSCGuXMbEwD28A" target="_blank">Submit Record</a>
 
                     <!-- 4. Login / Profile / Logout -->
